@@ -1,19 +1,7 @@
 <template>
     <div>
         <!--top banner -->
-        <div h80 class="message-top-bg"
-            style="background-image: url('https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/msg-top-bg.png');">
-            <div h80 w100vw class="message-top-bg-mask">
-                <div font-bold text-white text-9 text-center pt40>
-                    <el-icon mt1>
-                        <Promotion />
-                    </el-icon>留言板
-                </div>
-                <div font-bold text-white text-4 text-center mt4>在这里您可以写下你想对我说的话,或者对本网站有什么好的建议。</div>
-                <div font-bold text-white text-4 text-center mt4>我会认真看完每条留言。期待与您的邂逅。</div>
-            </div>
-        </div>
-
+        <TopBanner v-bind="childProps"></TopBanner>
         <!-- body -->
         <div w100vw flex justify-center>
             <div class="w70%">
@@ -99,7 +87,7 @@
                             <!-- 分页控制 -->
                             <div flex justify-center>
                                 <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
-                                    :page-sizes="[5, 10, 20, 50]" background layout="total, sizes, prev, pager, next"
+                                    :page-sizes="[5, 10, 20, 50]" background layout=" prev, pager, next"
                                     :total="mesList.totalRows" @size-change="getMes" @current-change="getMes" />
                             </div>
                         </el-card>
@@ -114,15 +102,25 @@
 import { ElMessage } from 'element-plus';
 import { onMounted, ref, watch } from 'vue';
 import { addMessage, getMessage } from '../api/message';
-components: {
-    ElMessage
-}
+import TopBanner from '../components/topBanner/index.vue';
+// banner的参数定义
+const childProps = ref({
+    height: 370,
+    backImg: 'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/msg-top-bg.png',
+    icon: 'Promotion',
+    title: '留言板',
+    content: [
+        '在这里您可以写下你想对我说的话,或者对本网站有什么好的建议。',
+        '我会认真看完每条留言。期待与您的邂逅。',
+    ]
+})
+
 // 获取留言部分
 const mesList = ref({})
 // 分页参数
 const pageParm = ref({
     pageNum: 1,
-    pageSize: 5
+    pageSize: 10
 })
 onMounted(() => {
     getMes()
@@ -132,7 +130,6 @@ const getMes = () => getMessage(pageParm.value).then(res => {
 })
 
 // 添加留言
-
 const addMesParam = ref({
     name: '',
     content: '',
@@ -140,6 +137,7 @@ const addMesParam = ref({
     avatar: ''
 })
 
+// QQ获取头像部分
 const qqNumber = ref('')
 watch(qqNumber, (newValue, oldValue) => {
     addMesParam.value.avatar = 'http://q1.qlogo.cn/g?b=qq&nk=' + newValue + '&s=100'

@@ -1,21 +1,10 @@
 <template>
     <div>
         <!-- 顶部banner -->
-        <div>
-            <div h100 class="message-top-bg"
-                style="background-image: url('https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/top-bg.png');">
-                <div w100vw class="message-top-bg-mask">
-                    <div font-bold text-white text-9 text-center pt40>
-                        <el-icon>
-                            <Camera />
-                        </el-icon>
-                        <span> 图集</span>
-                    </div>
-                    <div font-bold text-white text-4 text-center mt4>这里承载了我的所有回忆,记录着我的点点滴滴.</div>
-                    <div font-bold text-white text-4 text-center mt4>珍惜当下、热爱、感悟...</div>
-                </div>
-            </div>
-        </div>
+        <TopBanner title='图集' icon='Camera' back-img='https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/top-bg.png'
+            :height="400" :content="['这里承载了我的所有回忆,记录着我的点点滴滴.', '珍惜当下、热爱、感悟...']">
+        </TopBanner>
+
         <!-- 主体 -->
         <div flex justify-center>
 
@@ -27,9 +16,8 @@
 
                         </div>
                     </div>
-                    <div ml2rem class="model1">
+                    <div ml2rem h450px flex overflow-hidden class="model1">
                         <img v-for="(item, index) in imgList2" :key="index" :src="item" alt="" class="m1-img1">
-
                     </div>
                 </div>
 
@@ -54,6 +42,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import TopBanner from '../components/topBanner/index.vue'
 const imgList1 = ref([
     'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/1.jpg',
     'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/2.jpg',
@@ -89,6 +78,7 @@ const imgList2 = ref([
  .model2 img {
      /* margin-left: -2rem; */
      height: 250px;
+     width: 250px;
      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
  }
 </style>
