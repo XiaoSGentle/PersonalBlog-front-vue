@@ -16,14 +16,14 @@
 
                         </div>
                     </div>
-                    <div ml2rem h450px flex overflow-hidden class="model1">
-                        <img v-for="(item, index) in imgList2" :key="index" :src="item" alt="" class="m1-img1">
+                    <div ml1rem h450px flex overflow-hidden class="model1">
+                        <img v-for="(item, index) in imgList2" :key="index" :src="item">
                     </div>
                 </div>
 
                 <div mt50 flex justify-center>
                     <div class="model2">
-                        <img v-for="(item, index) in imgList1" :key="index" :src="item" alt="" class="m1-img1">
+                        <img v-for="(item, index) in imgList1" :key="index" :src="item">
                     </div>
                     <div h400px w100 ml10>
                         <div text-gray text-8 font-bold text-center>平江路</div>
@@ -49,10 +49,11 @@ const imgList1 = ref([
     'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/3.jpg',
 ])
 const imgList2 = ref([
-    'http://hbimg.huaban.com/6217561037505aa7e1081f0c7bf724a873d52543221426-XALAwm',
-    'http://hbimg.huaban.com/119bfe5d3a057f1ee8187162159166e8ae81933512ef37-neYyED',
-    'http://hbimg.huaban.com/e093b02a947209339962ad04244b581c291181d423458-GlBzh1',
-    'http://hbimg.huaban.com/f81e779c082841c04b6e44a1a06dceda5a18f772c4d20-tG8U1M'
+    'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/pic-1-1.jpg',
+    'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/pic-1-2.jpg',
+    'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/pic-1-3.jpg',
+    'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/pic-1-4.jpg',
+
 ])
 </script>
 

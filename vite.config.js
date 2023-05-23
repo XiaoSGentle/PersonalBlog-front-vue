@@ -5,6 +5,8 @@ import vue from '@vitejs/plugin-vue'
 // 引入Unocss
 import Unocss from 'unocss/vite';
 import { presetUno, presetAttributify, presetIcons } from 'unocss'
+// 代码高亮
+import prismjs from 'vite-plugin-prismjs';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,7 +27,11 @@ export default defineConfig({
         presetAttributify(),
         presetIcons()
       ],
-    })],
+    }),
+    prismjs({
+      languages: 'all',
+    }),
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

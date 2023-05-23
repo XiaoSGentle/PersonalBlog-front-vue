@@ -8,7 +8,8 @@ const routes = [
       { path: '/welcome', component: () => import('../views/Welcome.vue') },
       { path: '/aboutme', component: () => import('../views/Aboutme.vue') },
       { path: '/note', component: () => import('../views/Note.vue') },
-      { path: '/note/:uuid', component: () => import('../views/noteDetial/NoteDetial.vue') },
+      { path: '/noteEdit/:uuid', component: () => import('../views/noteDetial/NoteEdit.vue') },
+      { path: '/noteView/:uuid', component: () => import('../views/noteDetial/NoteView.vue') },
       { path: '/pic', component: () => import('../views/Pic.vue') },
       { path: '/message', component: () => import('../views/Message.vue') },
       { path: '/test', component: () => import('../components/topBanner/index.vue') },
@@ -19,5 +20,4 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
-
 export default router
