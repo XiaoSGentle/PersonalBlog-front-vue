@@ -1,29 +1,37 @@
-# PersonalBlog-front-vue
+#  个人博客前端页面部分 Vue
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-pnpm install
+# 🚀启动配置
+```bash
+$ npm i
+$ npm run dev
+$ open Swagger文档 http://localhost:3000
 ```
 
-### Compile and Hot-Reload for Development
+## 后端接口基于MidWay.js
 
-```sh
-pnpm dev
-```
+参见[https://github.com/XiaoSGentle/PersonalBlog-back-midway/tree/master]
 
-### Compile and Minify for Production
 
-```sh
-pnpm build
-```
+# 🎫开发日志
+
+## v0.1 2023.05.16-2023.05.19
+
+* 项目框架搭建
+* 项目的参数配置
+* 完成留言模块功能
+
+## v0.2 2023.05.22-2023.05.26
+  阶段目标：
+### v0.2.1 2023.05.22
+ * 组件化常用模块
+ * 完善笔记页面
+ * 完善部分BUG
+
+### v0.2.2 2023.05.23
+ * 添加VuePress组件,添加了md格式文件的编写和预览
+ * 添加了登录、注册、个人信息展示页面
+
+
+
+
