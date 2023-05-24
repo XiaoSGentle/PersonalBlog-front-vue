@@ -4,7 +4,7 @@
             <Header></Header>
         </el-header>
         <el-main>
-            <div relative class="mainbg">
+            <div relative>
                 <router-view></router-view>
             </div>
             <Footer></Footer>

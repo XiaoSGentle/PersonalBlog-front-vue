@@ -9,6 +9,7 @@ const routes = [
       { path: '/aboutme', component: () => import('../views/Aboutme.vue') },
       { path: '/note', component: () => import('../views/Note.vue') },
       { path: '/noteEdit/:uuid', component: () => import('../views/noteDetial/NoteEdit.vue') },
+      { path: '/noteAdd', component: () => import('../views/noteDetial/NoteEdit.vue') },
       { path: '/noteView/:uuid', component: () => import('../views/noteDetial/NoteView.vue') },
       { path: '/pic', component: () => import('../views/Pic.vue') },
       { path: '/message', component: () => import('../views/Message.vue') },

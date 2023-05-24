@@ -2,65 +2,75 @@
     <div>
         <!-- 顶部banner -->
         <TopBanner v-bind="childProps"></TopBanner>
-        <!-- Tags部分 -->
-        <div flex justify-center p7>
-            <el-card class="w-70%">
-                <div m4 text-6 flex justify-center>
-                    <div mt1>
-                        <el-icon>
-                            <Management />
-                        </el-icon>
-                    </div>
-                    <span>文章分类</span>
-                </div>
-                <div flex justify-center>
-                    <div w350>
-                        <el-check-tag checked v-for="item in items" :key="item.label" :type="item.type" m1 effect="dark"
-                            size="large">
-                            <span text-4>{{ item.num }}</span>
-                            <span ml2> {{ item.label }}</span>
-                        </el-check-tag>
-                    </div>
-                </div>
-            </el-card>
-        </div>
-        <!-- 三等分部分 -->
-        <div flex justify-center>
-            <div w-300 flex flex-wrap justify-center>
-                <el-card v-for="(item, index) in 9" :key="index" w90 m4 :body-style="{ padding: '0px' }">
-                    <!-- 图片 -->
-                    <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                        class="image w-100%" h70 />
-                    <!-- 描述 -->
-                    <div style="padding: 14px">
-                        <span text-5 font-bold>Yummy hamburger</span>
-                        <div class="bottom">
-                            <span>2021-09-01</span>
-
-                            <el-button text>
-                                <el-icon>
-                                    <View />
-                                </el-icon>
-                                <span>102人浏览</span>
-                            </el-button>
+        <div flex justify-center mt4>
+            <div w60>
+                <el-card>
+                    <div text-7 flex>
+                        <div mt1>
+                            <el-icon>
+                                <Flag />
+                            </el-icon>
                         </div>
-
+                        <span>全部分类</span>
                     </div>
-                    <!-- 文章底部标签 -->
-                    <div p2 style="">
-                        <el-tag v-for="item in tags" :key="item.label" :type="item.type" class="mx-1" effect="dark" round>
-                            {{ item.label }}
-                        </el-tag>
-                    </div>
-
+                    <el-checkbox-group v-model="selectClassify">
+                        <el-checkbox class="w100%" mt3 v-for="(item, index) in items" :label="item.label" size="large"
+                            border />
+                    </el-checkbox-group>
                 </el-card>
+
             </div>
-        </div>
-        <!-- 底部分页 -->
-        <div flex justify-center p5>
-            <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
-                :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next" :total="mesList.totalRows"
-                @size-change="getMes" @current-change="getMes" />
+            <!-- Tags部分 -->
+            <div>
+                <!-- 三等分部分 -->
+                <div flex justify-center>
+                    <div w-300 flex flex-wrap justify-center>
+                        <div class="w-100%" pl7 pr7>
+                            <el-card>
+                                <el-input size="large" :prefix-icon="Search" placeholder="搜索你想要的文章...">
+                                    <template #append>
+                                        <el-button w30>搜索</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-card>
+                        </div>
+                        <el-card v-for="(item, index) in 9" :key="index" w90 m4 :body-style="{ padding: '0px' }">
+                            <!-- 图片 -->
+                            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+                                class="image w-100%" h70 />
+                            <!-- 描述 -->
+                            <div style="padding: 14px">
+                                <span text-5 font-bold>Yummy hamburger</span>
+                                <div class="bottom">
+                                    <span>2021-09-01</span>
+                                    <el-button text>
+                                        <el-icon>
+                                            <View />
+                                        </el-icon>
+                                        <span>102人浏览</span>
+                                    </el-button>
+                                </div>
+
+                            </div>
+                            <!-- 文章底部标签 -->
+                            <div p2 style="">
+                                <el-tag v-for="item in tags" :key="item.label" :type="item.type" class="mx-1" effect="dark"
+                                    round>
+                                    {{ item.label }}
+                                </el-tag>
+                            </div>
+
+                        </el-card>
+                    </div>
+                </div>
+                <!-- 底部分页 -->
+                <div flex justify-center p5>
+                    <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
+                        :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next" :total="mesList.totalRows"
+                        @size-change="getMes" @current-change="getMes" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -69,6 +79,7 @@
 import { onMounted, ref } from 'vue';
 import TopBanner from '../components/topBanner/index.vue';
 import { addMessage, getMessage } from '../api/message';
+import { Search } from '@element-plus/icons-vue'
 // banner的参数定义
 const childProps = ref({
     height: 450,
@@ -112,9 +123,11 @@ const tags = ref([
 
 ])
 
-// 获取留言部分
+const selectClassify = ref([])
+
+// 111
 const mesList = ref({})
-// 分页参数
+// 111
 const pageParm = ref({
     pageNum: 1,
     pageSize: 5

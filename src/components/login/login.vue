@@ -1,48 +1,79 @@
 <template>
-    <!-- 头像 -->
     <div flex justify-center>
-        <el-avatar :size="100" src="https://q3.qlogo.cn/headimg_dl?dst_uin=1537212231&spec=100" />
-    </div>
-    <!-- 其他信息 -->
-    <div font-bold text-7 text-center>Xiaos</div>
-    <div mt2 flex justify-center>
-        <el-tag type="warning">
-            <el-icon>
-                <Male />
-            </el-icon>
-        </el-tag>
-        <el-tag ml2>
-            金牛座
-        </el-tag>
-        <el-tag ml2 type="danger">
-            2001-08-21
-        </el-tag>
-    </div>
-    <div mt8 flex justify-center>
-        <div flex flex-wrap w300px h300px>
-            <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
-                <IconDocument></IconDocument>
-                <div text-center>我的文章</div>
-            </div>
-            <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
-                <IconCollect></IconCollect>
-                <div text-center>我的收藏</div>
-            </div>
-            <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
-                <IconSetting></IconSetting>
-                <div text-center>设置</div>
-            </div>
-            <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
-                <IconExit></IconExit>
-                <div text-center>退出登录</div>
-            </div>
+        <div w100 h100>
+            <div text-center font-bold text-8 leading-40 font-sans> Login</div>
+
+            <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-position="left">
+                <el-form-item prop="username">
+                    <el-input v-model="loginForm.username" placeholder="请输入用户名" clearable :prefix-icon='User'
+                        :style="{ width: '100%' }"></el-input>
+                </el-form-item>
+                <el-form-item prop="password" mt8>
+                    <el-input v-model="loginForm.password" placeholder="请输入密码" clearable :prefix-icon='Lock' show-password
+                        :style="{ width: '100%' }"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button mt5 color="#626aef" round :style="{ width: '100%' }"
+                        @click="submitForm(loginFormRef)">登录</el-button>
+
+                </el-form-item>
+                <div text-center> <el-link type="primary" @click="goRegister">立即注册</el-link></div>
+            </el-form>
         </div>
     </div>
 </template>
 
 <script setup>
-import IconDocument from '../icons/login/IconDocument.vue';
-import IconCollect from '../icons/login/iconCollect.vue';
-import IconSetting from '../icons/login/IconSetting.vue';
-import IconExit from '../icons/login/IconExit.vue'
+import { Lock, User } from '@element-plus/icons-vue';
+import { defineEmits, ref } from 'vue';
+import { Login } from '../../api/user';
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus';
+const store = useStore()
+
+// 表单以及规则的定义
+const loginForm = ref({
+    username: "admin",
+    password: "admin",
+})
+const loginFormRules = ref({
+    username: [{
+        required: true,
+        message: '请输入用户名',
+        trigger: 'blur'
+    }],
+    password: [{
+        required: true,
+        message: '请输入密码',
+        trigger: 'blur'
+    }],
+})
+
+// 跳转注册
+const emit = defineEmits(['changeTag']);
+const goRegister = () => {
+    emit('changeTag', 2)
+}
+
+// 表单提交事件
+const loginFormRef = ref()
+const submitForm = (loginFormRef) => {
+    loginFormRef.validate(valid => {
+        if (!valid) return
+        Login(loginForm.value).then(res => {
+            if (res.status === 200) {
+                store.commit('setUserInfo', res.data.userInfo)
+                store.commit('setToken', res.data.token)
+                emit('changeTag', 1)
+                ElMessage.success('登录成功,欢迎回来@' + res.data.userInfo.nickname)
+            }
+        })
+    })
+}
+
+
+
+
+
+
 </script>
