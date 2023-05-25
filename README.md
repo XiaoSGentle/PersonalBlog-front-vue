@@ -5,7 +5,7 @@
 ```bash
 $ npm i
 $ npm run dev
-$ open Swagger文档 http://localhost:3000
+$ open  http://localhost:3000
 ```
 
 ## 后端接口基于MidWay.js
