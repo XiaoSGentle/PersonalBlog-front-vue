@@ -14,8 +14,8 @@
                         <span>全部分类</span>
                     </div>
                     <el-checkbox-group v-model="selectClassify">
-                        <el-checkbox class="w100%" mt3 v-for="(item, index) in items" :label="item.label" size="large"
-                            border />
+                        <el-checkbox class="w100%" mt3 v-for="(item, index) in noteClassifty" :label="item.classifyName"
+                            :value="item.uuid" size="large" border />
                     </el-checkbox-group>
                 </el-card>
 
@@ -35,40 +35,42 @@
 
                             </el-card>
                         </div>
-                        <el-card v-for="(item, index) in 9" :key="index" w90 m4 :body-style="{ padding: '0px' }">
-                            <!-- 图片 -->
-                            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                                class="image w-100%" h70 />
-                            <!-- 描述 -->
-                            <div style="padding: 14px">
-                                <span text-5 font-bold>Yummy hamburger</span>
-                                <div class="bottom">
-                                    <span>2021-09-01</span>
-                                    <el-button text>
-                                        <el-icon>
-                                            <View />
-                                        </el-icon>
-                                        <span>102人浏览</span>
-                                    </el-button>
+
+                        <el-card @click="alert('fuck')" v-for="(item, index) in noteList.data" :key="index" w90 m4
+                            :body-style="{ padding: '0px' }">
+                            <div @click="goNoteDetial(item.uuid)">
+                                <!-- 图片 -->
+                                <img :src="item.banner" class="image w-100%" h70 />
+                                <!-- 描述 -->
+                                <div style="padding: 14px">
+                                    <span text-5 font-bold>{{ item.title }}</span>
+                                    <div class="bottom">
+                                        <span>{{ item.createTime }}</span>
+                                        <el-button text>
+                                            <el-icon>
+                                                <View />
+                                            </el-icon>
+                                            <span>{{ item.readNum }}人浏览</span>
+                                        </el-button>
+                                    </div>
+
                                 </div>
-
+                                <!-- 文章底部标签 -->
+                                <div p2 style="">
+                                    <el-tag v-for="item in tags" :key="item.label" :type="item.type" class="mx-1"
+                                        effect="dark" round>
+                                        {{ item.label }}
+                                    </el-tag>
+                                </div>
                             </div>
-                            <!-- 文章底部标签 -->
-                            <div p2 style="">
-                                <el-tag v-for="item in tags" :key="item.label" :type="item.type" class="mx-1" effect="dark"
-                                    round>
-                                    {{ item.label }}
-                                </el-tag>
-                            </div>
-
                         </el-card>
                     </div>
                 </div>
                 <!-- 底部分页 -->
                 <div flex justify-center p5>
                     <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
-                        :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next" :total="mesList.totalRows"
-                        @size-change="getMes" @current-change="getMes" />
+                        :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next" :total="noteList.totalRows"
+                        @size-change="getNote" @current-change="getNote" />
                 </div>
             </div>
         </div>
@@ -76,10 +78,14 @@
 </template>
 
 <script setup>
+import { Search } from '@element-plus/icons-vue';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { getAllNote, getAllNoteClassify } from '../api/note';
 import TopBanner from '../components/topBanner/index.vue';
-import { addMessage, getMessage } from '../api/message';
-import { Search } from '@element-plus/icons-vue'
+
+
+const router = useRouter()
 // banner的参数定义
 const childProps = ref({
     height: 450,
@@ -93,25 +99,8 @@ const childProps = ref({
 })
 
 // tags数据模拟1
-const items = ref([
-    { type: '', label: 'JavaScript', num: 19 },
-    { type: 'success', label: 'Java', num: 10 },
-    { type: 'info', label: 'SpringBoot', num: 9 },
-    { type: 'danger', label: 'Unity', num: 7 },
-    { type: 'warning', label: 'Vue', num: 21 },
-    { type: '', label: 'JavaScript', num: 19 },
-    { type: 'success', label: 'Java', num: 10 },
-    { type: 'info', label: 'SpringBoot', num: 9 },
-    { type: 'danger', label: 'Unity', num: 7 },
-    { type: 'warning', label: 'Vue', num: 21 },
-    { type: '', label: 'JavaScript', num: 19 },
-    { type: 'success', label: 'Java', num: 10 },
-    { type: 'info', label: 'SpringBoot', num: 9 },
-    { type: 'danger', label: 'Unity', num: 7 },
-    { type: 'warning', label: 'Vue', num: 21 },
-    { type: '', label: 'JavaScript', num: 19 },
-    { type: 'success', label: 'Java', num: 10 },
-    { type: 'info', label: 'SpringBoot', num: 9 },
+const noteClassifty = ref([
+
 ])
 
 // TODO:模拟测试数据需要添加  tags数据模拟1
@@ -123,21 +112,30 @@ const tags = ref([
 
 ])
 
-const selectClassify = ref([])
+const goNoteDetial = param => {
+    router.push('/noteView/' + param)
+}
 
+
+const selectClassify = ref([])
 // 111
-const mesList = ref({})
+const noteList = ref({})
 // 111
 const pageParm = ref({
     pageNum: 1,
-    pageSize: 5
+    pageSize: 9
 })
 onMounted(() => {
-    getMes()
+    getNote()
+    getAllNoteClassify().then(res => {
+        noteClassifty.value = res.data
+    })
 })
-const getMes = () => getMessage(pageParm.value).then(res => {
-    mesList.value = res.data;
+const getNote = () => getAllNote(pageParm.value).then(res => {
+    noteList.value = res.data;
 })
+
+
 </script>
 
 

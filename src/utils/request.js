@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getBaseUrl } from './env'
 import store from '../store'
+import { ElMessage } from 'element-plus'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 //创建Axios实例
@@ -49,7 +50,10 @@ servise.interceptors.request.use(config => {
 
 //响应拦截器
 servise.interceptors.response.use(res => {
-
+    if (res.data.status !== 200) {
+        ElMessage.error(res.data.msg)
+        return
+    }
     return res.data
 })
 export default servise

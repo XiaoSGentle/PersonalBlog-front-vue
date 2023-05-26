@@ -35,6 +35,7 @@ VMdEditor.use(createCopyCodePlugin())
 
 const app = createApp(App)
 
+
 // 循环注册icons
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

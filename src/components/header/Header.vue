@@ -3,7 +3,7 @@
         <el-menu :ellipsis='false' mode="horizontal" router default-active='/welcome'>
             <div ml40></div>
             <el-menu-item>
-                <div text-7 text-gray font-bold>Xiaos | 个人博客</div>
+                <div text-7 font-serif font-bold>Xiaos | 个人博客</div>
 
             </el-menu-item>
             <div p3>
@@ -33,6 +33,12 @@
                     <ChatLineRound />
                 </el-icon>
                 <span>留言</span>
+            </el-menu-item>
+            <el-menu-item index="/chatGpt">
+                <el-icon>
+                    <Service />
+                </el-icon>
+                <span>ChatGPT</span>
             </el-menu-item>
             <el-menu-item index="/aboutme">
                 <el-icon>

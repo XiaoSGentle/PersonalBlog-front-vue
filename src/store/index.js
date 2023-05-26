@@ -5,6 +5,7 @@ export default createStore({
     isLogin: false,
     Token: '',
     userInfo: {},
+    noteContent: {}
   },
   getters: {
   },
@@ -14,6 +15,12 @@ export default createStore({
     },
     removeUserInfo(state) {
       state.userInfo = null
+    },
+    setNoteContent(state, noteContent) {
+      state.noteContent = noteContent
+    },
+    removeNoteContent(state) {
+      state.noteContent = null
     },
     setToken(state, Token) {
       state.isLogin = true

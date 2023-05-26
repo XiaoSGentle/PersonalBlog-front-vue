@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 import { Lock, User } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 

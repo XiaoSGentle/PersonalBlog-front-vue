@@ -1,19 +1,105 @@
 <template>
-    <v-md-editor :text="text" v-bind="toolbar" height="400px" @copy-code-success="handleCopyCodeSuccess"></v-md-editor>
+    <div mt flex justify-center>
+        <div w70 bg-gray-1 p3 rounded overflow-auto h84vh>
+            <div text-6 font-bold rounded> 目录</div>
+            <el-divider />
+            <div hover:text-emerald-300 hover:bg-bluegray-200 ease-linear p1 rounded v-for="anchor in menus"
+                :style="{ padding: `8px 0 8px ${anchor.indent * 20 + 5}px`, fontSize: `${(17 - (anchor.indent))}px`, cursor: `pointer`, fontWeight: `${anchor.indent === 0 ? 600 : 400}` }"
+                @click="handleAnchorClick(anchor)">
+                <a style="cursor: pointer">{{ anchor.title }}</a>
+            </div>
+        </div>
+        <div ml w300>
+            <v-md-editor ref="preview" v-model="noteContent.content" v-bind="toolbar"
+                @copy-code-success="handleCopyCodeSuccess">
+            </v-md-editor>
+        </div>
+
+    </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
-const text = ref('```js```');
-// 代码复制执行提示
+import { onMounted, onUpdated, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { getNotesByUuid } from '../../api/note';
+//vuex
+const store = useStore()
+const route = useRoute()
+
+
+// vuepress编辑框
+const toolbar = ref({
+    mode: 'preview',
+    height: '84vh',
+
+})
+// 定义保存参数
+const noteContent = ref({
+    uuid: '',
+    classificationUuid: '',
+    title: '',
+    content: '',
+    banner: '',
+    tags: ''
+})
+
+
+
+
+onMounted(() => {
+    getNotesByUuid({ uuid: route.params.uuid }).then(res => {
+        noteContent.value.uuid = res.data.uuid
+        noteContent.value.classificationUuid = res.data.classificationUuid
+        noteContent.value.title = res.data.title;
+        noteContent.value.content = res.data.content
+        noteContent.value.banner = res.data.banner;
+        noteContent.value.tags = res.data.tags;
+        store.commit('setNoteContent', noteContent.value)
+        noteContent.value = store.state.noteContent
+    })
+})
+
+
+// 获取侧边导航数据
+const menus = ref([])
+const preview = ref(null)
+const getMenus = () => {
+    const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6');
+    const titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
+    if (!titles.length) {
+        menus.value = [];
+        return;
+    }
+    const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort();
+    menus.value = titles.map((el) => ({
+        title: el.innerText,
+        lineIndex: el.getAttribute('data-v-md-line'),
+        indent: hTags.indexOf(el.tagName),
+    }));
+}
+onUpdated(() => {
+    getMenus()
+})
+
+const handleAnchorClick = (anchor) => {
+    const { lineIndex } = anchor;
+    const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`);
+    if (heading) {
+
+        heading.scrollIntoView({
+            behavior: "smooth",
+            block: 'start'
+        })
+    }
+}
+
+// 代码复制执行函数
 const handleCopyCodeSuccess = () => {
     ElMessage.success("复制成功")
 }
-// 
-const toolbar = ref({
-    mode: 'preview',
-    includeLevel: [1, 2, 3, 4, 5, 6],
-    defaultShowToc: true,
-})
+
+
 </script>
+

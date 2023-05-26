@@ -50,16 +50,16 @@
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus';
+import { defineEmits, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { ref } from 'vue';
+import { addNote } from '../../api/note';
 import IconDocument from '../icons/login/IconDocument.vue';
 import IconExit from '../icons/login/IconExit.vue';
 import IconSetting from '../icons/login/IconSetting.vue';
-import IconCollect from '../icons/login/iconCollect.vue';
 import IconWrite from '../icons/login/IconWrite.vue';
-import { ElMessage } from 'element-plus';
-import { useRouter } from 'vue-router';
-
+import IconCollect from '../icons/login/iconCollect.vue';
 
 
 // store中的信息
@@ -88,6 +88,9 @@ const loginOut = () => {
 }
 
 const goWriteArticle = () => {
-    router.push('/noteAdd')
+    addNote({ createUuid: userInfo.value.uuid }).then(res => {
+        router.push('/noteEdit/' + res.data.uuid)
+    })
 }
+
 </script>
