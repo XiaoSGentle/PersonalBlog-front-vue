@@ -48,8 +48,8 @@ const noteContent = ref({
 
 
 
-onMounted(() => {
-    getNotesByUuid({ uuid: route.params.uuid }).then(res => {
+onMounted(async () => {
+    await getNotesByUuid({ uuid: route.params.uuid }).then(res => {
         noteContent.value.uuid = res.data.uuid
         noteContent.value.classificationUuid = res.data.classificationUuid
         noteContent.value.title = res.data.title;
@@ -58,6 +58,8 @@ onMounted(() => {
         noteContent.value.tags = res.data.tags;
         store.commit('setNoteContent', noteContent.value)
         noteContent.value = store.state.noteContent
+
+        setTimeout(() => { getMenus() }, 500)
     })
 })
 
@@ -79,15 +81,13 @@ const getMenus = () => {
         indent: hTags.indexOf(el.tagName),
     }));
 }
-onUpdated(() => {
-    getMenus()
-})
+
+
 
 const handleAnchorClick = (anchor) => {
     const { lineIndex } = anchor;
     const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`);
     if (heading) {
-
         heading.scrollIntoView({
             behavior: "smooth",
             block: 'start'
