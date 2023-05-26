@@ -5,7 +5,7 @@
 ```bash
 $ npm i
 $ npm run dev
-$ open Swagger文档 http://localhost:3000
+$ open  http://localhost:3000
 ```
 
 ## 后端接口基于MidWay.js
@@ -22,7 +22,7 @@ $ open Swagger文档 http://localhost:3000
 * 完成留言模块功能
 
 ## v0.2 2023.05.22-2023.05.26
-  阶段目标：
+  阶段目标：暂无
 ### v0.2.1 2023.05.22
  * 组件化常用模块
  * 完善笔记页面
@@ -32,6 +32,10 @@ $ open Swagger文档 http://localhost:3000
  * 添加VuePress组件,添加了md格式文件的编写和预览
  * 添加了登录、注册、个人信息展示页面
 
+
+### v0.2.3 2023.05.24
+ * 优化文章页面
+ * 添加登录逻辑代码
 
 
 
