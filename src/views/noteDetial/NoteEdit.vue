@@ -10,7 +10,7 @@
                                 <EditPen />
                             </el-icon>
                         </div>
-                        <div ml3 w150>
+                        <div ml3 w100>
                             <el-input v-model="noteContent.title" size="large" placeholder="再此输入文章的标题..." />
                         </div>
                         <el-link ml3 mt3 :underline="false" :icon="Setting" type="primary"
@@ -40,12 +40,13 @@
                 <el-form-item label="标签">
                     <el-select class="w100%" size="large" v-model="noteContent.tags" multiple filterable allow-create
                         default-first-option :reserve-keyword="false" placeholder="选择你的文章标签">
-                        <el-option v-for="item in tags" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-option v-for="item in tags" :label="item.label" :value="item.value" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="分类">
-                    <el-cascader class="w100%" :options="classify" @change="classifiyChange" placeholder="选择文章分类"
-                        clearable />
+                    <el-cascader class="w100%" v-model="noteContent.classificationUuid" @change="classifiyChange"
+                        :options="classify" :props="{ value: 'uuid', label: 'classifyName' }" value="uuid"
+                        label="classifyName" placeholder="选择文章分类" clearable />
                 </el-form-item>
                 <el-form-item label="预览图">
                     <el-upload class="avatar-uploader" :action="getBaseUrl() + '/upload'" accept=".png,.jpg,.jpeg"
@@ -70,6 +71,7 @@ import { getBaseUrl } from '../../utils/env';
 import { useStore } from 'vuex';
 import { updataNote, getNotesByUuid } from '../../api/note'
 import { useRoute } from 'vue-router';
+import { getAllNoteClassify } from '../../api/note';
 //vuex
 
 const store = useStore()
@@ -120,10 +122,13 @@ onMounted(() => {
             noteContent.value.content = res.data.content
         }
         noteContent.value.banner = res.data.banner;
-        noteContent.value.tags = res.data.tags;
+        noteContent.value.tags = res.data.tags.split(',');
         store.commit('setNoteContent', noteContent.value)
         noteContent.value = store.state.noteContent
-        console.log(noteContent.value);
+    })
+    getAllNoteClassify().then(res => {
+        classify.value = res.data
+        console.log(classify.value);
     })
 })
 
@@ -144,20 +149,7 @@ const classifiyChange = (value) => {
 }
 
 // 定义文章分类
-const classify = [
-    {
-        value: '16843920727190',
-        label: 'Java',
-    },
-    {
-        value: '16843920727190',
-        label: '日常',
-    },
-    {
-        value: '16843920727190',
-        label: '吐槽',
-    },
-]
+const classify = ref([])
 //定义文章标签
 const tags = [
     {
@@ -173,6 +165,8 @@ const tags = [
         label: '吐槽',
     },
 ]
+
+
 
 
 

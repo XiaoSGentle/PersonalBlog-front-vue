@@ -36,7 +36,7 @@
                             </el-card>
                         </div>
 
-                        <el-card @click="alert('fuck')" v-for="(item, index) in noteList.data" :key="index" w90 m4
+                        <el-card v-for="(item, index) in noteList.data" :key="index" w90 m4
                             :body-style="{ padding: '0px' }">
                             <div @click="goNoteDetial(item.uuid)">
                                 <!-- 图片 -->
@@ -57,9 +57,9 @@
                                 </div>
                                 <!-- 文章底部标签 -->
                                 <div p2 style="">
-                                    <el-tag v-for="item in tags" :key="item.label" :type="item.type" class="mx-1"
-                                        effect="dark" round>
-                                        {{ item.label }}
+                                    <el-tag v-for="(tag, index) in item.tags.split(',')" effect="dark"
+                                        :type="tagsTypes[index]" round ml1>
+                                        {{ tag }}
                                     </el-tag>
                                 </div>
                             </div>
@@ -99,18 +99,10 @@ const childProps = ref({
 })
 
 // tags数据模拟1
-const noteClassifty = ref([
-
-])
+const noteClassifty = ref([])
 
 // TODO:模拟测试数据需要添加  tags数据模拟1
-const tags = ref([
-    { type: 'warning', label: '教程' },
-    { type: 'warning', label: '心得' },
-    { type: 'warning', label: 'DeBug' },
-    { type: 'warning', label: 'Linux' },
-
-])
+const tagsTypes = ref(['success', 'danger', 'warning', 'info'])
 
 const goNoteDetial = param => {
     router.push('/noteView/' + param)
@@ -119,11 +111,14 @@ const goNoteDetial = param => {
 
 const selectClassify = ref([])
 // 111
-const noteList = ref({})
+const noteList = ref({
+
+
+})
 // 111
 const pageParm = ref({
     pageNum: 1,
-    pageSize: 9
+    pageSize: 6
 })
 onMounted(() => {
     getNote()
@@ -131,9 +126,11 @@ onMounted(() => {
         noteClassifty.value = res.data
     })
 })
-const getNote = () => getAllNote(pageParm.value).then(res => {
-    noteList.value = res.data;
-})
+const getNote = () => {
+    getAllNote(pageParm.value).then(res => {
+        noteList.value = res.data;
+    })
+}
 
 
 </script>

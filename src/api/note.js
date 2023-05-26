@@ -25,7 +25,7 @@ export function getAllNote(param) {
     return request({
         url: '/note/getAllNote',
         method: 'post',
-        params: param
+        data: param
     })
 }
 export function getAllNoteClassify() {
