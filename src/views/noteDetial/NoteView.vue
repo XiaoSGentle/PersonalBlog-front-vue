@@ -20,7 +20,7 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
-import { onMounted, onUpdated, ref } from 'vue';
+import { onMounted, ref, onBeforeUpdate, onUpdated } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { getNotesByUuid } from '../../api/note';
@@ -59,8 +59,16 @@ onMounted(() => {
         store.commit('setNoteContent', noteContent.value)
         noteContent.value = store.state.noteContent
     })
+
 })
 
+
+
+watch(noteContent, (newValue, oldValue) => {
+    \
+}
+    , { deep: true }
+)
 
 // 获取侧边导航数据
 const menus = ref([])
@@ -79,9 +87,7 @@ const getMenus = () => {
         indent: hTags.indexOf(el.tagName),
     }));
 }
-onUpdated(() => {
-    getMenus()
-})
+
 
 const handleAnchorClick = (anchor) => {
     const { lineIndex } = anchor;

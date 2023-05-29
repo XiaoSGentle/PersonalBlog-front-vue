@@ -25,6 +25,7 @@ VMdEditor.use(vuepressTheme, {
     Prism,
     codeHighlightExtensionMap: {
         vue: 'xml',
+        'C#': 'java'
     },
 });
 VMdEditor.use(createLineNumbertPlugin())
