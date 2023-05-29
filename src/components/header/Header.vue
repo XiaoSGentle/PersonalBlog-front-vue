@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-menu :ellipsis='false' mode="horizontal" router default-active='/welcome'>
-            <div ml40></div>
+            <div ml20></div>
             <el-menu-item>
                 <div text-7 font-serif font-bold>Xiaos | 个人博客</div>
 
@@ -46,14 +46,11 @@
                 </el-icon>
                 <span>关于</span>
             </el-menu-item>
-            <el-menu-item index="">
-                <div w2></div>
-            </el-menu-item>
             <el-menu-item @click="drawerVisible = !drawerVisible">
-                <el-avatar ml1 :size="40" :src="storeInfo.userInfo.avatar" />
+                <el-avatar :size="40" :src="storeInfo.userInfo.avatar" />
                 <span font-bold ml3>{{ storeInfo.isLogin ? '@' + storeInfo.userInfo.nickname + ' 欢迎回来~' : '登录' }}</span>
             </el-menu-item>
-            <div mr20></div>
+            <div mr15></div>
         </el-menu>
     </div>
 

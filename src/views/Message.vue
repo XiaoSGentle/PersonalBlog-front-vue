@@ -87,7 +87,7 @@
                             <!-- 分页控制 -->
                             <div flex justify-center>
                                 <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
-                                    :page-sizes="[5, 10, 20, 50]" background layout=" prev, pager, next"
+                                    :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next"
                                     :total="mesList.totalRows" @size-change="getMes" @current-change="getMes" />
                             </div>
                         </el-card>
