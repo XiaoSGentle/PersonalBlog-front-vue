@@ -13,26 +13,21 @@
                         </div>
                         <span>全部分类</span>
                     </div>
-                    <el-checkbox-group v-model="selectClassify">
-                        <el-checkbox class="w100%" mt3 v-for="(item, index) in noteClassifty" :label="item.classifyName"
-                            :value="item.uuid" size="large" border />
+                    <el-checkbox-group @change="checkboxGroupChange" v-model="checkboxGroupSelect">
+                        <el-checkbox class="w100%" mt3 v-for="(item, index) in noteClassiftys" :label="item.classifyName"
+                            size="large" border />
                     </el-checkbox-group>
                 </el-card>
-
             </div>
             <!-- Tags部分 -->
             <div>
                 <!-- 三等分部分 -->
-                <div flex justify-center>
+                <div min-h160 flex justify-center>
                     <div w-300 flex flex-wrap justify-center>
                         <div class="w-100%" pl7 pr7>
                             <el-card>
-                                <el-input size="large" :prefix-icon="Search" placeholder="搜索你想要的文章...">
-                                    <template #append>
-                                        <el-button w30>搜索</el-button>
-                                    </template>
+                                <el-input size="large" v-model="searchParm.keyword" placeholder="搜索你想要的文章...">
                                 </el-input>
-
                             </el-card>
                         </div>
 
@@ -53,7 +48,6 @@
                                             <span>{{ item.readNum }}人浏览</span>
                                         </el-button>
                                     </div>
-
                                 </div>
                                 <!-- 文章底部标签 -->
                                 <div p2 style="">
@@ -68,7 +62,7 @@
                 </div>
                 <!-- 底部分页 -->
                 <div flex justify-center p5>
-                    <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
+                    <el-pagination v-model:current-page="searchParm.pageNum" v-model:page-size="searchParm.pageSize"
                         :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next" :total="noteList.totalRows"
                         @size-change="getNote" @current-change="getNote" />
                 </div>
@@ -79,7 +73,7 @@
 
 <script setup>
 import { Search } from '@element-plus/icons-vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllNote, getAllNoteClassify } from '../api/note';
 import TopBanner from '../components/topBanner/index.vue';
@@ -98,40 +92,61 @@ const childProps = ref({
     ]
 })
 
-// tags数据模拟1
-const noteClassifty = ref([])
+// 笔记分类
+const noteClassiftys = ref([
+    {
+        uuid: '',
+        classifyName: '',
+        num: 0
+    }
+])
 
-// TODO:模拟测试数据需要添加  tags数据模拟1
+// tags样式
 const tagsTypes = ref(['success', 'danger', 'warning', 'info'])
 
 const goNoteDetial = param => {
     router.push('/noteView/' + param)
 }
-
-
-const selectClassify = ref([])
-// 111
-const noteList = ref({
-
-
-})
-// 111
-const pageParm = ref({
+// 筛选后的结果
+const noteList = ref({})
+// 查询的条件
+const searchParm = ref({
     pageNum: 1,
-    pageSize: 6
+    pageSize: 6,
+    keyword: '',
+    classfiyUuids: [],
 })
 onMounted(() => {
     getNote()
     getAllNoteClassify().then(res => {
-        noteClassifty.value = res.data
+        noteClassiftys.value = res.data
     })
 })
+
+// 多选框选择事件
+const checkboxGroupChange = value => {
+    let selectUuid = []
+    value.forEach(item => {
+        noteClassiftys.value.forEach(noteClassiftys => {
+            if (item === noteClassiftys.classifyName) {
+                selectUuid.push(noteClassiftys.uuid);
+            }
+        })
+    });
+    searchParm.value.classfiyUuids = selectUuid
+}
+// 多选框选择事件
+
+const checkboxGroupSelect = ref([])
+
+// 获取笔记
 const getNote = () => {
-    getAllNote(pageParm.value).then(res => {
+    getAllNote(searchParm.value).then(res => {
         noteList.value = res.data;
     })
 }
 
+watch(searchParm, () => getNote(), { deep: true })
 
 </script>
 
