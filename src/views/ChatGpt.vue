@@ -41,7 +41,7 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue';
 import { ref } from 'vue';
-// import { askQue } from '../api/ChatGpt';
+import { askQue } from '../api/ChatGpt';
 const toolbar = ref({
     mode: 'preview',
 })
@@ -63,11 +63,11 @@ const getAns = async () => {
     queList.value.push({ role: 'rebot', message: '# 😑😑😑抱歉 \n :::danger    \n 暂时还需要完善,请耐心等待哦！ \n:::' })
 
 
-    // askQue(reqParam.value).then(res => {
-    //     const responseText = new TextDecoder().decode(res.data);
-    //     // TODO:
-    //     console.log(responseText);
-    // })
+    askQue(reqParam.value).then(res => {
+        const responseText = new TextDecoder().decode(res.data);
+        // TODO:
+        console.log(responseText);
+    })
 
     reqParam.value.prompt = ''
 
