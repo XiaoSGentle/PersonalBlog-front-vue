@@ -28,14 +28,9 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-<<<<<<< HEAD
-import { onMounted, ref, onBeforeUpdate, onUpdated } from 'vue';
-=======
 import { onMounted, ref } from 'vue';
->>>>>>> 7529f2f76ab2f274105abe927541497aa894a277
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { getNotesByUuid } from '../../api/note';
 //vuex
@@ -82,7 +77,6 @@ onMounted(async () => {
 
 
 watch(noteContent, (newValue, oldValue) => {
-    \
 }
     , { deep: true }
 )
@@ -104,11 +98,6 @@ const getMenus = () => {
         indent: hTags.indexOf(el.tagName),
     }));
 }
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 7529f2f76ab2f274105abe927541497aa894a277
 
 const handleAnchorClick = (anchor) => {
     const { lineIndex } = anchor;
