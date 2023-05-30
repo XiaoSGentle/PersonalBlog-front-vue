@@ -1,6 +1,6 @@
 <template>
     <div mt flex justify-center>
-        <div w70 bg-gray-1 p3 rounded overflow-auto h84vh>
+        <div v-if="!menusVisible" w70 bg-gray-1 p3 rounded overflow-auto h82vh>
             <div flex justify-between>
                 <span text-6 font-bold rounded>目录</span>
                 <span text-3 mt3 cursor-pointer text-lightBlue @click="goEditNote">
@@ -9,7 +9,6 @@
                     </el-icon>
                     编辑此页面
                 </span>
-
             </div>
             <el-divider />
             <div hover:text-emerald-300 hover:bg-bluegray-200 ease-linear p1 rounded v-for="anchor in menus"
@@ -39,10 +38,12 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
+const menusVisible = ref(document.body.clientWidth < 800)
+
 // vuepress编辑框
 const toolbar = ref({
     mode: 'preview',
-    height: '84vh',
+    height: '82vh',
 
 })
 // 定义保存参数

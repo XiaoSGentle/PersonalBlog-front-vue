@@ -1,7 +1,7 @@
 <template>
     <div flex justify-center>
         <div w100 h100>
-            <div text-center font-bold text-8 leading-40 font-sans> Login</div>
+            <div text-center font-bold text-8 leading-40 font-sans> Login(请直接登录)</div>
 
             <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-position="left">
                 <el-form-item prop="username">
@@ -15,7 +15,6 @@
                 <el-form-item>
                     <el-button mt5 color="#626aef" round :style="{ width: '100%' }"
                         @click="submitForm(loginFormRef)">登录</el-button>
-
                 </el-form-item>
                 <div text-center> <el-link type="primary" @click="goRegister">立即注册</el-link></div>
             </el-form>
@@ -50,7 +49,7 @@ const loginFormRules = ref({
 })
 
 // 跳转注册
-const emit = defineEmits(['changeTag']);
+const emit = defineEmits();
 const goRegister = () => {
     emit('changeTag', 2)
 }
@@ -65,6 +64,7 @@ const submitForm = (loginFormRef) => {
                 store.commit('setUserInfo', res.data.userInfo)
                 store.commit('setToken', res.data.token)
                 emit('changeTag', 1)
+                emit('changeDrawerVisible')
                 ElMessage.success('登录成功,欢迎回来@' + res.data.userInfo.nickname)
             }
         })
