@@ -62,7 +62,7 @@ const goEditNote = () => {
 
 
 onMounted(async () => {
-    await getNotesByUuid({ uuid: route.params.uuid }).then(res => {
+    await getNotesByUuid(route.params.uuid).then(res => {
         noteContent.value.uuid = res.data.uuid
         noteContent.value.classificationUuid = res.data.classificationUuid
         noteContent.value.title = res.data.title;
