@@ -111,7 +111,7 @@ watch(noteContent, (newValue, oldValue) => {
 
 
 onMounted(() => {
-    getNotesByUuid({ uuid: route.params.uuid }).then(res => {
+    getNotesByUuid(route.params.uuid).then(res => {
         noteContent.value.uuid = res.data.uuid
         noteContent.value.classificationUuid = res.data.classificationUuid
         noteContent.value.title = res.data.title;
@@ -128,7 +128,6 @@ onMounted(() => {
     })
     getAllNoteClassify().then(res => {
         classify.value = res.data
-        console.log(classify.value);
     })
 })
 

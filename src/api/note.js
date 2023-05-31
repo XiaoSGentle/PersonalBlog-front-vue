@@ -2,35 +2,34 @@ import request from '../utils/request'
 
 export function updataNote(param) {
     return request({
-        url: '/note/updateNote',
-        method: 'post',
+        url: '/note',
+        method: 'put',
         data: param
     })
 }
 export function addNote(param) {
     return request({
-        url: '/note/addNote',
-        method: 'get',
+        url: '/note',
+        method: 'post',
         params: param
     })
 }
 export function getNotesByUuid(param) {
     return request({
-        url: '/note/getNotesByUuid',
-        method: 'get',
-        params: param
+        url: '/note/' + param,
+        method: 'get'
     })
 }
 export function getAllNote(param) {
     return request({
-        url: '/note/getAllNote',
-        method: 'post',
-        data: param
+        url: '/note/all',
+        method: 'get',
+        params: param
     })
 }
 export function getAllNoteClassify() {
     return request({
-        url: '/note/getAllNoteClassify',
+        url: '/note/classify',
         method: 'get'
     })
 }
