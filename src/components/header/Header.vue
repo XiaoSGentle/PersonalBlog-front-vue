@@ -45,37 +45,44 @@
                 </el-icon>
                 <span>关于</span>
             </el-menu-item>
-            <el-menu-item @click="drawerVisible = !drawerVisible">
-                <el-avatar :size="40" :src="storeInfo.userInfo.avatar" />
-                <span font-bold ml3>{{ storeInfo.isLogin ? '@' + storeInfo.userInfo.nickname + ' 欢迎回来~' : '登录' }}</span>
+            <el-menu-item @click="showPreInfo">
+                <el-avatar v-if="store.state.isLogin" :size="40" :src="storeInfo.userInfo.avatar" />
+                <span font-bold ml3>{{ storeInfo.isLogin ? '@' + storeInfo.userInfo.nickname + ' 欢迎回来~' : '立即登录' }}</span>
             </el-menu-item>
             <div mr15></div>
         </el-menu>
     </div>
-
     <el-drawer v-model="drawerVisible" title="🚀 Xiaos | Blog" :with-header="true" size="400">
-        <PerInfo @changeTag="changeTag" v-if="showTagIndex === 1"></PerInfo>
-        <RegisterFrom @changeTag="changeTag" v-if="showTagIndex === 2"></RegisterFrom>
-        <LoginFrom @changeTag="changeTag" @changeDrawerVisible="changeDrawerVisible" v-if="showTagIndex === 3"></LoginFrom>
+        <PerInfo></PerInfo>
     </el-drawer>
 </template>
 
 
 <script setup>
 import { Search } from '@element-plus/icons-vue';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
-import LoginFrom from '../login/login.vue';
-import PerInfo from '../login/perInfo.vue';
-import RegisterFrom from '../login/register.vue';
+import PerInfo from '../perInfo/perInfo.vue';
+import { useRouter } from 'vue-router';
 const store = useStore()
 const drawerVisible = ref(false)
+const router = useRouter()
 
 
 // 定义显示的页面标记
 const showTagIndex = ref(3)
 const changeTag = (value) => {
     showTagIndex.value = value
+}
+
+// 定义头像点击事件
+
+const showPreInfo = () => {
+    if (store.state.isLogin) {
+        drawerVisible.value = !drawerVisible.value
+    } else {
+        router.push('/login')
+    }
 }
 
 // 改变抽屉是否显示
@@ -86,10 +93,9 @@ const changeDrawerVisible = () => {
 const storeInfo = ref({})
 storeInfo.value = store.state
 
-// if (storeInfo.value.isLogin) {
-//     drawerVisible.value = false
-//     showTagIndex.value = 1
-// }
-
+if (storeInfo.value.isLogin) {
+    drawerVisible.value = false
+    showTagIndex.value = 1
+}
 </script>
 <style scoped></style>

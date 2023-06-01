@@ -63,7 +63,7 @@
                 <!-- 底部分页 -->
                 <div flex justify-center p5>
                     <el-pagination v-model:current-page="searchParm.pageNum" v-model:page-size="searchParm.pageSize"
-                        :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next" :total="noteList.totalRows"
+                        :page-sizes="[5, 10, 20, 50]" background layout="pager" :total="noteList.totalRows"
                         @size-change="getNote" @current-change="getNote" />
                 </div>
             </div>
@@ -108,7 +108,9 @@ const goNoteDetial = param => {
     router.push('/noteView/' + param)
 }
 // 筛选后的结果
-const noteList = ref({})
+const noteList = ref({
+    totalRows: 0
+})
 // 查询的条件
 const searchParm = ref({
     pageNum: 1,

@@ -135,6 +135,7 @@ onMounted(() => {
 const handleCopyCodeSuccess = () => {
     ElMessage.success("复制成功")
 }
+
 // 代码保存
 const handleSave = (text, html) => {
     updataNote(noteContent.value).then(res => {
@@ -143,8 +144,10 @@ const handleSave = (text, html) => {
         }
     })
 }
+
+// 
 const classifiyChange = (value) => {
-    noteContent.value.classificationUuid = value[0]
+    noteContent.value.classificationUuid = value
 }
 
 // 定义文章分类

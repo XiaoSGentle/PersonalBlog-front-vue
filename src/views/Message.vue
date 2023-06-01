@@ -83,12 +83,11 @@
                                     <el-divider />
                                 </div>
                             </div>
-                            <!-- TODO: 英文???? -->
                             <!-- 分页控制 -->
                             <div flex justify-center>
                                 <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
-                                    :page-sizes="[5, 10, 20, 50]" background layout="prev, pager, next"
-                                    :total="mesList.totalRows" @size-change="getMes" @current-change="getMes" />
+                                    :page-sizes="[5, 10, 20, 50]" background layout="pager" :total="mesList.totalRows"
+                                    @size-change="getMes" @current-change="getMes" />
                             </div>
                         </el-card>
                     </div>
@@ -116,7 +115,9 @@ const childProps = ref({
 })
 
 // 获取留言部分
-const mesList = ref({})
+const mesList = ref({
+    totalRows: 0
+})
 // 分页参数
 const pageParm = ref({
     pageNum: 1,

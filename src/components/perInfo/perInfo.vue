@@ -83,8 +83,8 @@ userInfo.value = store.state.userInfo
 const emit = defineEmits(['changeTag']);
 const loginOut = () => {
     store.commit('loginOut')
-    emit('changeTag', 3)
     ElMessage.warning('退出登录成功！')
+    router.push('/login')
 }
 
 const goWriteArticle = () => {

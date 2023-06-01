@@ -19,6 +19,28 @@
     -ms-overflow-style: none;
 }
 
+/* 页面切换动效 */
+
+.child-view {
+    width: 100%;
+    overflow: hidden;
+    transition: all 1s cubic-bezier(.55, 0, .1, 1);
+}
+
+/* 离开 */
+.slide-fade-leave-to {
+    opacity: 0;
+    transform: translateX(50px)
+}
+
+/* 进入 */
+.slide-fade-enter-from {
+    opacity: 10;
+    transform: translateX(-50px)
+}
+
+
+
 body,
 dl,
 dt,

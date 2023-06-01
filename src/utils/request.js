@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { getBaseUrl } from './env'
 import store from '../store'
+import { ElMessageBox } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import router from '../router'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 //创建Axios实例
@@ -13,6 +15,20 @@ const servise = axios.create(
         timeout: 10000
     }
 )
+
+// 路由拦截器
+router.beforeEach((to, from) => {
+    if (to.fullPath.includes("welcome")) return true
+    if (!to.fullPath.includes("login") && !isAuthenticated()) {
+        return { path: '/login' }
+    }
+})
+
+// 验证是否登录
+
+function isAuthenticated() {
+    return store.state.isLogin
+}
 
 // 请求拦截器
 servise.interceptors.request.use(config => {
@@ -50,10 +66,35 @@ servise.interceptors.request.use(config => {
 
 //响应拦截器
 servise.interceptors.response.use(res => {
+    // token过期情况
+    if (res.data.status === 419) {
+        // 清除登陆信息
+        store.commit('loginOut')
+        // 弹窗提醒
+        ElMessageBox.confirm(
+            '您的登录状态过期，请重新登录',
+            '温馨提示',
+            {
+                showCancelButton: false,
+                confirmButtonText: '重新登录',
+                showClose: false,
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+                type: 'warning',
+                roundButton: true,
+            }
+        ).then(() => {
+            router.push('/login')
+            return
+        })
+    }
+    // 报错显示
     if (res.data.status !== 200) {
         ElMessage.error(res.data.msg)
         return
     }
+
+
     return res.data
 })
 export default servise

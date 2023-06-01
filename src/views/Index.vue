@@ -1,11 +1,15 @@
 <template>
-    <el-container>
+    <el-container relative>
         <el-header>
             <Header></Header>
         </el-header>
         <el-main>
-            <div relative>
-                <router-view></router-view>
+            <div style="position: relative;">
+                <router-view v-slot="{ Component }">
+                    <transition name="slide-fade">
+                        <component class="child-view" :is="Component" />
+                    </transition>
+                </router-view>
             </div>
             <Footer></Footer>
         </el-main>
