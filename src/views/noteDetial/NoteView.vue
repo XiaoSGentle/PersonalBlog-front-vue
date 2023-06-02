@@ -33,7 +33,9 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { getNotesByUuid } from '../../api/note';
-//vuex
+import { ElLoading } from 'element-plus'
+
+
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
@@ -62,6 +64,9 @@ const goEditNote = () => {
 
 
 onMounted(async () => {
+    const loadService = ElLoading.service({
+        text: '正在加载,请稍后...'
+    })
     await getNotesByUuid(route.params.uuid).then(res => {
         noteContent.value.uuid = res.data.uuid
         noteContent.value.classificationUuid = res.data.classificationUuid
@@ -73,6 +78,7 @@ onMounted(async () => {
         noteContent.value = store.state.noteContent
         setTimeout(() => { getMenus() }, 500)
     })
+    loadService.close()
 })
 
 

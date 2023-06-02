@@ -53,7 +53,7 @@
         </el-menu>
     </div>
     <el-drawer v-model="drawerVisible" title="🚀 Xiaos | Blog" :with-header="true" size="400">
-        <PerInfo></PerInfo>
+        <PerInfo @changeDrawerVisible="changeDrawerVisible"></PerInfo>
     </el-drawer>
 </template>
 
@@ -75,8 +75,10 @@ const changeTag = (value) => {
     showTagIndex.value = value
 }
 
-// 定义头像点击事件
 
+
+
+// 定义头像点击事件
 const showPreInfo = () => {
     if (store.state.isLogin) {
         drawerVisible.value = !drawerVisible.value

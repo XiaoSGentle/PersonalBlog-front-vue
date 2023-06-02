@@ -11,7 +11,7 @@ export function addNote(param) {
     return request({
         url: '/note',
         method: 'post',
-        params: param
+        data: param
     })
 }
 export function getNotesByUuid(param) {

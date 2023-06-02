@@ -13,10 +13,10 @@
                         </div>
                         <span>全部分类</span>
                     </div>
-                    <el-checkbox-group @change="checkboxGroupChange" v-model="checkboxGroupSelect">
-                        <el-checkbox class="w100%" mt3 v-for="(item, index) in noteClassiftys" :label="item.classifyName"
+                    <el-radio-group @change="radioGroupChange" v-model="selectRadioGroup">
+                        <el-radio class="w-50" mt3 v-for="(item, index) in noteClassiftys" :label="item.classifyName"
                             size="large" border />
-                    </el-checkbox-group>
+                    </el-radio-group>
                 </el-card>
             </div>
             <!-- Tags部分 -->
@@ -116,7 +116,7 @@ const searchParm = ref({
     pageNum: 1,
     pageSize: 6,
     keyword: '',
-    classfiyUuids: [],
+    classfiyUuids: '',
 })
 onMounted(() => {
     getNote()
@@ -125,21 +125,16 @@ onMounted(() => {
     })
 })
 
-// 多选框选择事件
-const checkboxGroupChange = value => {
-    let selectUuid = []
-    value.forEach(item => {
-        noteClassiftys.value.forEach(noteClassiftys => {
-            if (item === noteClassiftys.classifyName) {
-                selectUuid.push(noteClassiftys.uuid);
-            }
-        })
+// 笔记分类选择事件
+const radioGroupChange = value => {
+    noteClassiftys.value.forEach(noteClassiftys => {
+        if (value === noteClassiftys.classifyName) {
+            searchParm.value.classfiyUuids = noteClassiftys.uuid
+        }
     });
-    searchParm.value.classfiyUuids = selectUuid
 }
-// 多选框选择事件
-
-const checkboxGroupSelect = ref([])
+// 前端显示定义
+const selectRadioGroup = ref();
 
 // 获取笔记
 const getNote = () => {

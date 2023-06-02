@@ -49,8 +49,10 @@
                         label="classifyName" placeholder="选择文章分类" clearable />
                 </el-form-item>
                 <el-form-item label="预览图">
-                    <el-upload class="avatar-uploader" :action="getBaseUrl() + '/upload'" accept=".png,.jpg,.jpeg"
-                        :show-file-list="false" :on-success="handleBannerSuccess" :before-upload="beforeBannerUpload">
+                    <el-upload class="avatar-uploader" :action="getBaseUrl() + '/upload'" accept=".png,.jpg,.jpeg" :headers="{
+                        Authorization:
+                            'Bearer ' + store.state.Token
+                    }" :show-file-list="false" :on-success="handleBannerSuccess" :before-upload="beforeBannerUpload">
                         <img v-if="noteContent.banner" :src="noteContent.banner" class="avatar" />
                         <el-icon v-else class="avatar-uploader-icon">
                             <Plus />
@@ -72,11 +74,13 @@ import { useStore } from 'vuex';
 import { updataNote, getNotesByUuid } from '../../api/note'
 import { useRoute } from 'vue-router';
 import { getAllNoteClassify } from '../../api/note';
+import { ElLoading } from 'element-plus'
+
 //vuex
+
 
 const store = useStore()
 const route = useRoute()
-
 
 // vuepress编辑框
 const toolbar = ref({
@@ -110,26 +114,35 @@ watch(noteContent, (newValue, oldValue) => {
 }, { deep: true })
 
 
-onMounted(() => {
-    getNotesByUuid(route.params.uuid).then(res => {
-        noteContent.value.uuid = res.data.uuid
-        noteContent.value.classificationUuid = res.data.classificationUuid
-        noteContent.value.title = res.data.title;
-        if (res.data.content === null) {
-            noteContent.value.content = '尽情发挥吧😁😁😁'
-        }
-        else {
-            noteContent.value.content = res.data.content
-        }
-        noteContent.value.banner = res.data.banner;
-        noteContent.value.tags = res.data.tags.split(',');
-        store.commit('setNoteContent', noteContent.value)
-        noteContent.value = store.state.noteContent
+
+onMounted(
+
+    async () => {
+        const loadService = ElLoading.service({
+            text: '正在加载,请稍后...'
+        })
+        await getNotesByUuid(route.params.uuid).then(res => {
+            noteContent.value.uuid = res.data.uuid
+            noteContent.value.classificationUuid = res.data.classificationUuid
+            noteContent.value.title = res.data.title;
+            if (res.data.content === null) {
+                noteContent.value.content = '尽情发挥吧😁😁😁'
+            }
+            else {
+                noteContent.value.content = res.data.content
+            }
+            noteContent.value.banner = res.data.banner;
+            noteContent.value.tags = res.data.tags.split(',');
+            store.commit('setNoteContent', noteContent.value)
+            noteContent.value = store.state.noteContent
+        })
+        await getAllNoteClassify().then(res => {
+            classify.value = res.data
+        })
+        loadService.close()
     })
-    getAllNoteClassify().then(res => {
-        classify.value = res.data
-    })
-})
+
+
 
 // 代码复制执行函数
 const handleCopyCodeSuccess = () => {
@@ -145,9 +158,9 @@ const handleSave = (text, html) => {
     })
 }
 
-// 
+// 分类改变事件
 const classifiyChange = (value) => {
-    noteContent.value.classificationUuid = value
+    noteContent.value.classificationUuid = value[0]
 }
 
 // 定义文章分类
@@ -189,7 +202,7 @@ const handleBannerSuccess = (response, uploadFile) => {
     noteContent.value.banner = response.data
 }
 const beforeBannerUpload = (rawFile) => {
-    if (rawFile.type !== 'image/jpeg') {
+    if (rawFile.type !== 'image/*') {
         ElMessage.error('上传的文件类型必须为图片')
         return false
     } else if (rawFile.size / 1024 / 1024 > 10) {
