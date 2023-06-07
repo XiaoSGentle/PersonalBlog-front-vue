@@ -12,13 +12,27 @@ const routes = [
       { path: '/note', component: () => import('../views/Note.vue') },
       { path: '/chatGpt', component: () => import('../views/chatGpt.vue') },
       { path: '/noteEdit/:uuid', component: () => import('../views/noteDetial/NoteEdit.vue') },
-      // { path: '/noteAdd', component: () => import('../views/noteDetial/NoteEdit.vue') },
+      { path: '/myNote', component: () => import('../views/noteDetial/Mynote.vue') },
       { path: '/noteView/:uuid', component: () => import('../views/noteDetial/NoteView.vue') },
       { path: '/pic', component: () => import('../views/Pic.vue') },
       { path: '/message', component: () => import('../views/Message.vue') },
       { path: '/test', component: () => import('../components/topBanner/index.vue') },
     ]
   }
+  ,
+  {
+    path: '/admin', component: () => import('../views/admin/Index.vue'),
+    children: [
+      { path: '/admin/statistical', component: () => import('../views/admin/statistical.vue') },
+      { path: '/admin/home', component: () => import('../views/admin/home.vue') },
+      { path: '/admin/pic', component: () => import('../views/admin/pic.vue') },
+      { path: '/admin/note', component: () => import('../views/admin/note.vue') },
+      { path: '/admin/message', component: () => import('../views/admin/message.vue') },
+      { path: '/admin/setting', component: () => import('../views/admin/setting.vue') },
+    ]
+  }
+
+
 ]
 const router = createRouter({
   history: createWebHashHistory(),

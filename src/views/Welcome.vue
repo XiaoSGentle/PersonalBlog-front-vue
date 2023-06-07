@@ -25,11 +25,11 @@
     <div flex justify-center mt10>
         <div>
             <div class="text-box" h90 w180 bg-gray>
-                <div text-white text-8> 学而不思则罔，思而不学则殆 </div>
-                <div text-white text-right text-6>————孔子</div>
+                <div text-white text-8> {{ homeIndex.proverb1[0].content }}</div>
+                <div text-white text-right text-6>————{{ homeIndex.proverb1[0].author }}</div>
                 <div text-white class="detial" mt3>
                     <div>
-                        <p> 这句话为孔子所提倡的一种读书及学习方法。指的是一味读书而不思考，就会因为不能深刻理解书本的意义而不能合理有效利用书本的知识，甚至会陷入迷茫。而如果一味空想而不去进行实实在在地学习和钻研，则终究是沙上建塔，一无所得。告诫我们只有把学习和思考结合起来，才能学到切实有用的知识，否则就会收效甚微。
+                        <p> {{ homeIndex.proverb1[0].des }}
                         </p>
                     </div>
                 </div>
@@ -41,6 +41,9 @@
                         <Sunny />
                     </el-icon>
                     <span>自己·理想</span>
+                    <p>{{ homeIndex.proverb2[0].content }}</p>
+                    <p>{{ homeIndex.proverb2[0].desc }}</p>
+
                 </div>
             </div>
         </div>
@@ -58,14 +61,68 @@
         <div flex justify-center>
             <el-card mt5>
                 <div class="w-300 " flex flex-wrap justify-center>
-                    <el-card v-for="(item, index) in 6" :key="index" h80 w130 m4 bg-warmgray></el-card>
+                    <el-card v-for="(item, index) in  homeIndex.note1" :key="index" h70 w130 m4 bg-warmgray
+                        :body-style="{ padding: '0px' }">
+                        <div flex bg-gray-3 @click="goNoteDetial(item.uuid)">
+                            <div>
+                                <img class="h60 w85" :src="item.banner" alt="">
+                            </div>
+
+                            <div p1>
+                                <div h6 overflow-hidden text-clip mt45>
+                                    <el-tag v-for="(tag, index) in item.tags.split(',')" effect="dark"
+                                        :type="tagsTypes[index]" round ml1>
+                                        {{ tag }}
+                                    </el-tag>
+                                </div>
+                                <div text-3 mt3>{{ item.updateTime }}</div>
+                            </div>
+                        </div>
+                        <div flex justify-between m1>
+                            <div text-5 font-bold>{{ item.title }}</div>
+                            <div mt--1>
+                                <el-button text>
+                                    <el-icon>
+                                        <View />
+                                    </el-icon>
+                                    <span>{{ item.readNum }}人浏览</span>
+                                </el-button>
+                            </div>
+                        </div>
+                    </el-card>
                 </div>
             </el-card>
         </div>
         <!-- 三等分部分 -->
-        <div flex justify-center>、
+        <div flex justify-center>
             <div class="w-300 " flex flex-wrap justify-center>
-                <el-card v-for="(item, index) in 9" :key="index" h80 w90 m4 bg-warmgray></el-card>
+                <el-card v-for="(item, index) in homeIndex.note2" :key="index" h110 w90 m4 bg-warmgray
+                    :body-style="{ padding: '0px' }">
+                    <div @click="goNoteDetial(item.uuid)">
+                        <!-- 图片 -->
+                        <img :src="item.banner" class="image w-100%" h70 />
+                        <!-- 描述 -->
+                        <div style="padding: 14px">
+                            <span text-5 font-bold>{{ item.title }}</span>
+                            <div class="bottom">
+                                <span>{{ item.createTime }}</span>
+                                <el-button text>
+                                    <el-icon>
+                                        <View />
+                                    </el-icon>
+                                    <span>{{ item.readNum }}人浏览</span>
+                                </el-button>
+                            </div>
+                        </div>
+                        <!-- 文章底部标签 -->
+                        <div p2 style="">
+                            <el-tag v-for="(tag, index) in item.tags.split(',')" effect="dark" :type="tagsTypes[index]"
+                                round ml1>
+                                {{ tag }}
+                            </el-tag>
+                        </div>
+                    </div>
+                </el-card>
             </div>
         </div>
 
@@ -73,12 +130,29 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { getHome } from '../api/home';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
+
+const homeIndex = ref({
+    proverb1: [{}],
+    proverb2: [{}],
+    note1: [],
+    note2: [],
+})
+// tags样式
+const tagsTypes = ref(['success', 'danger', 'warning', 'info'])
 onMounted(() => {
-
+    getHome().then(res => {
+        homeIndex.value = res.data
+    })
 })
 
+const goNoteDetial = param => {
+    router.push('/noteView/' + param)
+}
 
 </script>
 
@@ -86,7 +160,6 @@ onMounted(() => {
 .main-box {
     height: 100vh;
     width: 100vw;
-    /* background: url('http:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/bg.jpg'); */
     background-size: cover;
 }
 

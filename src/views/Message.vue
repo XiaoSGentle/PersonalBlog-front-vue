@@ -4,7 +4,7 @@
         <TopBanner v-bind="childProps"></TopBanner>
         <!-- body -->
         <div w100vw flex justify-center>
-            <div class="w70%">
+            <div class="w90%">
                 <el-divider border-style="dashed" />
                 <!-- 留言框 -->
                 <div flex justify-center>

@@ -29,17 +29,23 @@
                 <IconWrite></IconWrite>
                 <div text-center>撰写文章</div>
             </div>
-            <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
+            <div @click="goMyNote" p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
                 <IconDocument></IconDocument>
                 <div text-center>我的文章</div>
             </div>
+            <!-- 
             <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
                 <IconCollect></IconCollect>
                 <div text-center>我的收藏</div>
             </div>
             <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
                 <IconSetting></IconSetting>
-                <div text-center>设置</div>
+                <div text-center>修改信息</div>
+            </div> 
+            -->
+            <div @click="goAdmin" p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
+                <IconSetting></IconSetting>
+                <div text-center>后台管理</div>
             </div>
             <div @click="loginOut" p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
                 <IconExit></IconExit>
@@ -142,6 +148,16 @@ const goWriteArticle = () => {
     })
 }
 
+// 创建并跳转对话框
+const goMyNote = () => {
+    router.push('/Mynote');
+    emit('changeDrawerVisible')
+}
+// 创建并跳转对话框
+const goAdmin = () => {
+    router.push('/admin/statistical');
+    emit('changeDrawerVisible')
+}
 
 // 定义保存参数
 const noteContent = ref({

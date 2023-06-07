@@ -33,6 +33,18 @@ export function getAllNoteClassify() {
         method: 'get'
     })
 }
+export function getNotesByUser() {
+    return request({
+        url: '/note/user',
+        method: 'get'
+    })
+}
+export function delNoteByUuid(param) {
+    return request({
+        url: '/note/' + param,
+        method: 'DELETE'
+    })
+}
 
 
 

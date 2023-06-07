@@ -72,7 +72,6 @@
 </template>
 
 <script setup>
-import { Search } from '@element-plus/icons-vue';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllNote, getAllNoteClassify } from '../api/note';
