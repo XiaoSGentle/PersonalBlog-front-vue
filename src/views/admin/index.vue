@@ -13,10 +13,10 @@
             </div>
         </el-header>
         <el-container>
-            <el-aside :width="isCollapse ? '56px' : '200px'" duration-400 ease-in-out>
+            <el-aside :width="isCollapse ? '64px' : '200px'" duration-400 ease-in-out>
                 <el-menu h93vh router :collapse="isCollapse" default-active="/admin/statistical">
                     <!-- 侧边栏控制按钮 -->
-                    <div @click="isCollapse = !isCollapse" duration-400 ease-in-out
+                    <div @click="isCollapse = !isCollapse" duration-400 ease-in-out hover:bg-gray-2
                         :style="{ width: isCollapse ? ' 64px' : '200px' }">
                         <div p4 font-bold style="border-bottom: 1px solid rgb(121, 121, 121);" duration-400 ease-in-out>
                             <!-- 展开时 -->
@@ -66,6 +66,12 @@
                         </el-icon>
                         <template #title>留言管理</template>
                     </el-menu-item>
+                    <el-menu-item index="/admin/log">
+                        <el-icon>
+                            <Memo />
+                        </el-icon>
+                        <template #title>日志管理</template>
+                    </el-menu-item>
                     <el-menu-item index="/admin/setting">
                         <el-icon>
                             <setting />
@@ -76,10 +82,11 @@
                 </el-menu>
             </el-aside>
             <el-main>
-                <div bg-gray-2 h93vh>
-                    <router-view v-slot="{ Component }">
-                        <transition name="slide-fade">
-                            <component class="child-view" :is="Component" />
+                <div class="w90%" ma>
+                    <router-view min-h90vh overflow-auto v-slot="{ Component }"
+                        style="background-color: var(--el-color-white);">
+                        <transition name="fade">
+                            <component :is="Component" />
                         </transition>
                     </router-view>
                 </div>

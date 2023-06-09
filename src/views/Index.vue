@@ -1,19 +1,23 @@
 <template>
-    <el-container relative>
-        <el-header>
-            <Header></Header>
-        </el-header>
-        <el-main>
-            <div style="position: relative;">
-                <router-view v-slot="{ Component }">
-                    <transition name="slide-fade">
-                        <component class="child-view" :is="Component" />
-                    </transition>
-                </router-view>
+    <div>
+        <el-container>
+            <!-- 头 -->
+            <el-header>
+                <Header></Header>
+            </el-header>
+            <!--主题 -->
+            <div>
+                <el-main min-h100vh>
+                    <router-view v-slot="{ Component }" style="background-color: var(--el-color-white);">
+                        <transition name="fade">
+                            <component :is="Component" />
+                        </transition>
+                    </router-view>
+                </el-main>
+                <Footer></Footer>
             </div>
-            <Footer></Footer>
-        </el-main>
-    </el-container>
+        </el-container>
+    </div>
 </template>
 
 <script setup>
@@ -26,10 +30,5 @@ import Footer from '../components/footer/Footer.vue';
 .el-main {
     margin: 0;
     padding: 0;
-}
-
-.mainbg {
-    background-color: azure;
-
 }
 </style>

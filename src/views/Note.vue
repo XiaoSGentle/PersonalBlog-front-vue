@@ -81,7 +81,7 @@ import TopBanner from '../components/topBanner/index.vue';
 const router = useRouter()
 // banner的参数定义
 const childProps = ref({
-    height: 450,
+    height: 370,
     backImg: 'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/note-banner-bg.jpg',
     icon: 'Notebook',
     title: '笔记',

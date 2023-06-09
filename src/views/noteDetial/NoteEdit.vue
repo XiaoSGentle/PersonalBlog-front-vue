@@ -214,7 +214,7 @@ const beforeBannerUpload = (rawFile) => {
 
 </script>
 
-<style scoped>
+<style>
 .avatar-uploader .avatar {
     width: 178px;
     height: 178px;
@@ -222,7 +222,7 @@ const beforeBannerUpload = (rawFile) => {
 }
 </style>
 
-<style>
+<style scoped>
 .avatar-uploader .el-upload {
     border: 1px dashed var(--el-border-color);
     border-radius: 6px;

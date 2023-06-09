@@ -20,26 +20,25 @@
 }
 
 /* 页面切换动效 */
-
-.child-view {
-    width: 100%;
-    overflow: hidden;
-    transition: all 1s cubic-bezier(.55, 0, .1, 1);
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
 }
 
-/* 离开 */
-.slide-fade-leave-to {
+.admin-title {
+    font-size: 25px;
+    margin: 2rem 0rem 1rem 0rem;
+    padding-left: 1rem;
+    font-weight: bold;
+    border-left: 4px solid rgb(238, 234, 0);
+    line-height: 25px;
+    border-radius: 4px;
+}
+
+.fade-enter-from,
+.fade-leave-to {
     opacity: 0;
-    transform: translateX(50px)
 }
-
-/* 进入 */
-.slide-fade-enter-from {
-    opacity: 10;
-    transform: translateX(-50px)
-}
-
-
 
 body,
 dl,

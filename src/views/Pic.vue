@@ -1,9 +1,7 @@
 <template>
     <div>
         <!-- 顶部banner -->
-        <TopBanner title='图集' icon='Camera' back-img='https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/top-bg.png'
-            :height="400" :content="['这里承载了我的所有回忆,记录着我的点点滴滴.', '珍惜当下、热爱、感悟...']">
-        </TopBanner>
+        <TopBanner v-bind="childProps" />
         <div class="w-90%" ma p5>
             <div pt pb>
                 <div flex justify-center>
@@ -63,6 +61,21 @@
 
 import { ref } from 'vue'
 import TopBanner from '../components/topBanner/index.vue'
+
+
+// banner的参数定义
+const childProps = ref({
+    height: 370,
+    backImg: 'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/top-bg.png',
+    icon: 'Camera',
+    title: '图集',
+    content: [
+        '这里承载了我的所有回忆,记录着我的点点滴滴.',
+        '珍惜当下、热爱、感悟...'
+    ]
+})
+
+
 const imgList1 = ref([
     'https://xiaos-1314769426.cos.ap-nanjing.myqcloud.com/1.jpg',
     'https://xiaos-1314769426.cos.ap-nanjing.myqcloud.com/2.jpg',

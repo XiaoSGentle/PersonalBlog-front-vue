@@ -28,6 +28,7 @@ const routes = [
       { path: '/admin/pic', component: () => import('../views/admin/pic.vue') },
       { path: '/admin/note', component: () => import('../views/admin/note.vue') },
       { path: '/admin/message', component: () => import('../views/admin/message.vue') },
+      { path: '/admin/log', component: () => import('../views/admin/log.vue') },
       { path: '/admin/setting', component: () => import('../views/admin/setting.vue') },
     ]
   }
