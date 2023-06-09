@@ -88,11 +88,16 @@ servise.interceptors.response.use(res => {
             return
         })
     }
+    if (res.data.status === 299) {
+        ElMessage.warning(res.data.msg)
+        return
+    }
     // 报错显示
     if (res.data.status !== 200) {
         ElMessage.error(res.data.msg)
         return
     }
+
 
 
     return res.data

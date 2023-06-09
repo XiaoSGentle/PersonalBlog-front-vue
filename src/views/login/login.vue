@@ -55,7 +55,7 @@ const goRegister = () => {
     router.push('/register')
 }
 
-// 表单提交事件
+// 表单修改事件
 const loginFormRef = ref()
 const submitForm = (loginFormRef) => {
     loginFormRef.validate(valid => {

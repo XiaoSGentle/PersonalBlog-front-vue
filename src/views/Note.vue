@@ -106,10 +106,7 @@ const tagsTypes = ref(['success', 'danger', 'warning', 'info'])
 const goNoteDetial = param => {
     router.push('/noteView/' + param)
 }
-// 筛选后的结果
-const noteList = ref({
-    totalRows: 0
-})
+x
 // 查询的条件
 const searchParm = ref({
     pageNum: 1,

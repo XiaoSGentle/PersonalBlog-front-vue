@@ -20,6 +20,7 @@ export function getNotesByUuid(param) {
         method: 'get'
     })
 }
+
 export function getAllNote(param) {
     return request({
         url: '/note/all',

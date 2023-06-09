@@ -21,10 +21,11 @@ export function getAllBgPic() {
     })
 }
 
-export function getallSaying() {
+export function getallSaying(param) {
     return request({
         url: '/admin/home/allSaying',
-        method: 'get'
+        method: 'get',
+        params: param
     })
 }
 

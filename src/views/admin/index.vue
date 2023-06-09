@@ -14,7 +14,7 @@
         </el-header>
         <el-container>
             <el-aside :width="isCollapse ? '64px' : '200px'" duration-400 ease-in-out>
-                <el-menu h93vh router :collapse="isCollapse" default-active="/admin/statistical">
+                <el-menu h93vh router :collapse="isCollapse" default-active="/admin/home">
                     <!-- 侧边栏控制按钮 -->
                     <div @click="isCollapse = !isCollapse" duration-400 ease-in-out hover:bg-gray-2
                         :style="{ width: isCollapse ? ' 64px' : '200px' }">
@@ -83,7 +83,7 @@
             </el-aside>
             <el-main>
                 <div class="w90%" ma>
-                    <router-view min-h90vh overflow-auto v-slot="{ Component }"
+                    <router-view min-h90vh h93vh overflow-auto v-slot="{ Component }"
                         style="background-color: var(--el-color-white);">
                         <transition name="fade">
                             <component :is="Component" />

@@ -18,59 +18,94 @@
                         Authorization:
                             'Bearer ' + store.state.Token
                     }" :show-file-list="false" :on-success="handleBannerSuccess" :before-upload="beforeBannerUpload">
-                        <img v-if="formData.banner" :src="formData.banner" class="avatar" />
+                        <img v-if="formData.backImg" :src="formData.backImg" class="avatar" />
                         <el-icon v-else class="avatar-uploader-icon">
                             <Plus />
                         </el-icon>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="座右铭1" prop="motto1">
-                    <el-input v-model="formData.motto1" placeholder="请输入座右铭1" clearable
-                        :style="{ width: '100%' }"></el-input>
-                </el-form-item>
-                <el-form-item label="座右铭2" prop="motto2">
-                    <el-input v-model="formData.motto2" placeholder="请输入座右铭2" clearable
+                <el-form-item label="内容" prop="content">
+                    <el-input v-model="formData.content" type="textarea" placeholder="请输入座右铭2" clearable
                         :style="{ width: '100%' }"></el-input>
                 </el-form-item>
                 <div flex justify-center>
-                    <el-button type="primary" @click="submitForm" round w50>提交</el-button>
-                    <el-button @click="resetForm" round w50>重置</el-button>
+                    <el-button type="primary" @click="submitForm" round w50>修改</el-button>
                 </div>
             </el-form>
         </div>
 
         <div class="admin-title">留言列表</div>
-        <el-table :data="messageList" style="width: 100%" center>
-            <el-table-column prop="date" label="uuid"></el-table-column> //按顺序显示
-            <el-table-column prop="name" label="姓名"></el-table-column> //按顺序显示
-            <el-table-column prop="name" label="内容"></el-table-column> //按顺序显示
-            <el-table-column prop="name" label="IP地址"></el-table-column> //按顺序显示
-            <el-table-column prop="name" label="浏览器类型"></el-table-column> //按顺序显示
-            <el-table-column prop="address" label="留言时间"></el-table-column> //一个表格列应该包含
-            <el-table-column prop="address" label="操作"></el-table-column> //一个表格列应该包含
+        <el-table :data="mesList.data" style="width: 100%" center>
+            <el-table-column prop="uuid" label="uuid"></el-table-column> //按顺序显示
+            <el-table-column prop="name" label="姓名" width="150"></el-table-column> //按顺序显示
+            <el-table-column prop="avatar" label="头像" width="80">
+                <template #default="scope">
+                    <el-avatar :src="scope.row.avatar"></el-avatar>
+                </template>
+            </el-table-column> //按顺序显示
+            <el-table-column prop="content" label="内容"></el-table-column> //按顺序显示
+            <el-table-column prop="ip" label="IP地址" width="150"></el-table-column> //按顺序显示
+            <el-table-column prop="browser" label="浏览器类型" width="150"></el-table-column> //按顺序显示
+            <el-table-column prop="createTime" label="留言时间"></el-table-column> //一个表格列应该包含
+            <el-table-column label="操作">
+                <template #default="scope">
+                    <el-link ml type="primary" @click="deldeteMessage(scope.row.uuid)"> 删除</el-link>
+                </template>
+
+            </el-table-column> //一个表格列应该包含
         </el-table>
+        <div flex justify-center mt mb>
+            <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
+                :page-sizes="[5, 10, 20, 50]" background layout="pager" :total="mesList.totalRows" @size-change="getMes"
+                @current-change="getMes" />
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
-
-const messageList = ref([])
-
-
+import { ref, onMounted } from 'vue';
+import { getBanner, updateBanner } from '../../api/admin/banner'
 import { getBaseUrl } from '../../utils/env';
 import { useStore } from 'vuex';
+import { BannerEnums } from '../../enum/Enum'
+import { getMessage } from '../../api/message';
+import { delMessage } from '../../api/admin/message';
+const mesList = ref({
+    totalRows: 0
+})
 const store = useStore()
 const formData = ref({
+    uuid: '',
     height: undefined,
     icon: undefined,
     title: undefined,
     backImg: null,
-    motto1: undefined,
-    motto2: undefined,
+    content: undefined,
 },)
 
+onMounted(() => {
+    getBanners()
+    getMes()
+})
+
+
+// 获取轮播图
+const getBanners = () => {
+    getBanner(BannerEnums.MESSAGE).then(res => {
+        formData.value = res.data
+    })
+}
+
+
+
+// 分页参数
+const pageParm = ref({
+    pageNum: 1,
+    pageSize: 10
+})
+const getMes = () => getMessage(pageParm.value).then(res => {
+    mesList.value = res.data;
+})
 const rules = ref(
     {
         height: [{
@@ -88,22 +123,25 @@ const rules = ref(
             message: '请输入标题',
             trigger: 'blur'
         }],
-        motto1: [{
+        content: [{
             required: true,
-            message: '请输入座右铭1',
-            trigger: 'blur'
-        }],
-        motto2: [{
-            required: true,
-            message: '请输入座右铭2',
+            message: '请输入该行内容',
             trigger: 'blur'
         }],
     },
 )
 
 
+const deldeteMessage = (uuid) => {
+    delMessage(uuid).then(
+        res => {
+            getMes()
+        }
+    )
+}
+
 const handleBannerSuccess = (response, uploadFile) => {
-    formData.value.banner = response.data
+    formData.value.backImg = response.data
 }
 const beforeBannerUpload = (rawFile) => {
     if (rawFile.type !== 'image/*') {
@@ -116,14 +154,18 @@ const beforeBannerUpload = (rawFile) => {
     return true
 }
 
-const submitForm = () => { }
-const resetForm = () => { }
+const updateBanners = () => {
+    updateBanner(formData.value).then(res => { })
+}
+const submitForm = () => {
+    updateBanners()
+}
 
 </script>
 
 <style scoped>
 .avatar-uploader .avatar {
-    width: 178px;
+    width: 578px;
     height: 178px;
     display: block;
 }

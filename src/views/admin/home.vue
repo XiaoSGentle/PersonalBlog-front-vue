@@ -14,10 +14,9 @@
                         :style="{ width: '100%' }"></el-input>
                 </el-form-item>
                 <el-form-item label="预览图" prop="avatar">
-                    <el-upload class="avatar-uploader" :action="getBaseUrl() + '/upload'" accept=".png,.jpg,.jpeg" :headers="{
-                        Authorization:
-                            'Bearer ' + store.state.Token
-                    }" :show-file-list="false" :on-success="handleBannerSuccess" :before-upload="beforeBannerUpload">
+                    <el-upload class="avatar-uploader" :action="getBaseUrl() + '/upload'" accept=".png,.jpg,.jpeg"
+                        :headers="{ Authorization: 'Bearer ' + store.state.Token }" :show-file-list="false"
+                        :on-success="handleBannerSuccess" :before-upload="beforeBannerUpload">
                         <img v-if="formData.avatar" :src="formData.avatar" class="avatar" />
                         <el-icon v-else class="avatar-uploader-icon">
                             <Plus />
@@ -31,25 +30,48 @@
 
         </div>
         <div class="admin-title">
-            可供随机的背景
+            主页随机的背景
         </div>
         <div>
-            <el-table :data="bgImg" style="width: 100%" center>
-                <el-table-column prop="date" label="uuid"></el-table-column> //按顺序显示
-                <el-table-column prop="name" label="图片"></el-table-column> //按顺序显示
-                <el-table-column prop="address" label="上传时间"></el-table-column> //一个表格列应该包含
-                <el-table-column prop="address" label="操作"></el-table-column> //一个表格列应该包含
+            <el-table :data="bgImg" style="width: 100%" border>
+                <el-table-column prop="uuid" label="uuid"></el-table-column> //按顺序显示
+                <el-table-column label="图片">
+                    <template #default="scope">
+                        <el-image style="width: 200px; height: 100px" :src="scope.row.backImg" />
+                    </template>
+                </el-table-column> //按顺序显示
+                <el-table-column label="操作">
+                    <template #default="scope">
+                        <el-link type="primary"> 删除</el-link>
+                    </template>
+
+                </el-table-column> //一个表格列应该包含
             </el-table>
         </div>
         <div class="admin-title">
             可供随机的名言
         </div>
-        <div>
-            <el-table :data="bgImg" style="width: 100%" center>
-                <el-table-column prop="date" label="uuid"></el-table-column> //按顺序显示
-                <el-table-column prop="name" label="图片"></el-table-column> //按顺序显示
-                <el-table-column prop="address" label="上传时间"></el-table-column> //一个表格列应该包含
-                <el-table-column prop="address" label="操作"></el-table-column> //一个表格列应该包含
+        <div mb10>
+            <el-table :data="sayIng" style="width: 100%" border>
+                <el-table-column prop="uuid" label="uuid" width="150"></el-table-column>
+                <el-table-column prop="pos" label="类型" width="120" sortable>
+
+                    <template #default="scope">
+                        <el-tag :type="scope.row.pos === 'myself' ? 'success' : 'danger'">
+                            {{ scope.row.pos === 'myself' ? '理想自己' : '名言警句' }}
+                        </el-tag>
+                    </template>
+                </el-table-column> //按顺序显示
+                <el-table-column prop="content" label="内容"></el-table-column>
+                <el-table-column prop="author" label="作者" width="120"></el-table-column>
+                <el-table-column prop="des" label="描述"></el-table-column>
+                <el-table-column prop="updateTime" label="添加时间" sortable></el-table-column>
+                <el-table-column label="操作" width="150">
+                    <template #default="scope">
+                        <el-link type="primary"> 修改</el-link>
+                        <el-link ml type="primary"> 删除</el-link>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
     </div>
@@ -59,11 +81,12 @@
 import { ref, onMounted } from 'vue';
 import { getBaseUrl } from '../../utils/env';
 import { useStore } from 'vuex';
-import { getBlogInfo, setBlogInfo, getAllBgPic, getallSaying } from '../../api/admin/home'
+import { getBlogInfo, getAllBgPic, getallSaying } from '../../api/admin/home'
 const store = useStore()
 const bgImg = ref([])
 const sayIng = ref([])
 const formData = ref({
+    uuid: '',
     name: '',
     motto: '',
     avatar: ''
@@ -109,8 +132,8 @@ const getAllBgPics = () => {
 }
 // 获取所有可供随机的名言
 const selectTag = ref('')
-const getallSayings = selectTag => {
-    getallSaying().then(res => {
+const getallSayings = () => {
+    getallSaying(selectTag.value).then(res => {
         sayIng.value = res.data
     })
 }

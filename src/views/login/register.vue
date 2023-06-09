@@ -68,7 +68,7 @@ const loginFormRules = ref({
     ]
 })
 
-// 校验提交表单
+// 校验修改表单
 const loginFormRef = ref()
 const submitForm = (loginFormRef) => {
     loginFormRef.validate(valid => {
