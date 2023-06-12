@@ -32,8 +32,8 @@
                 </div>
             </el-form>
         </div>
-        <div mt10 flex justify-end>
-            <el-button w30 round type="primary" @click="dialogVisible = true">上传</el-button>
+        <div flex justify-end mt>
+            <el-button color="#626aef" round w50 @click="dialogVisible = !dialogVisible">上传图片</el-button>
         </div>
         <div class="admin-title">美食图片列表</div>
         <el-table :data="fineFoodList" style="width: 100%" center>
@@ -57,7 +57,7 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
-                    <el-link type="primary"> 修改</el-link>
+                    <el-link type="primary" @click="openDiaVis(scope.row.uuid)"> 修改</el-link>
                     <el-link ml type="primary" @click="delPicByUuid(scope.row.uuid)"> 删除</el-link>
                 </template>
             </el-table-column>
@@ -84,7 +84,7 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
-                    <el-link type="primary"> 修改</el-link>
+                    <el-link type="primary" @click="openDiaVis(scope.row.uuid)"> 修改</el-link>
                     <el-link ml type="primary" @click="delPicByUuid(scope.row.uuid)"> 删除</el-link>
                 </template>
             </el-table-column>
@@ -111,13 +111,13 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
-                    <el-link type="primary"> 修改</el-link>
+                    <el-link type="primary" @click="openDiaVis(scope.row.uuid)"> 修改</el-link>
                     <el-link ml type="primary" @click="delPicByUuid(scope.row.uuid)"> 删除</el-link>
                 </template>
             </el-table-column>
         </el-table>
         <el-dialog v-model="dialogVisible" width="800" p10>
-            <el-form ref="addForm" :model="addForm" :rules="addFormRules">
+            <el-form :model="addForm" :rules="addFormRules">
                 <el-form-item label="标题" prop="title">
                     <el-input v-model="addForm.title" placeholder="请输入banner标题" clearable :style="{ width: '100%' }">
                     </el-input>
@@ -125,33 +125,30 @@
                 <el-form-item label="描述" prop="des">
                     <el-input v-model="addForm.des" placeholder="请输入描述" clearable :style="{ width: '100%' }"></el-input>
                 </el-form-item>
-                <el-form-item label="是否展示" prop="isShow" required>
-                    <el-switch v-model="addForm.isShow"></el-switch>
+                <el-form-item label="是否展示" prop="isShow">
+                    <el-switch v-model="addForm.isShow" :active-value="1" :inactive-value="0"></el-switch>
                 </el-form-item>
-                <el-form-item label="分类" prop="classify">
+                <el-form-item label="分类">
                     <el-select v-model="addForm.classify" placeholder="请选择分类" clearable :style="{ width: '100%' }">
                         <el-option v-for="(item, index) in classifyOptions" :key="index" :label="item.label"
                             :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="图片" prop="backImg" required>
-                    <el-upload class="avatar-uploader" :action="getBaseUrl() + '/upload'" accept=".png,.jpg,.jpeg"
+                <el-form-item label="图片" prop="url" required>
+                    <el-upload class="avatar-uploader1" :action="getBaseUrl() + '/upload'" accept=".png,.jpg,.jpeg"
                         :headers="{ Authorization: 'Bearer ' + store.state.Token }" :show-file-list="false"
                         :on-success="handleBannerSuccess1" :before-upload="beforeBannerUpload1">
-                        <img v-if="addForm.backImg" :src="addForm.backImg" class="avatar" />
-                        <el-icon v-else class="avatar-uploader-icon">
+                        <img v-if="addForm.url" :src="addForm.url" class="avatar1" />
+                        <el-icon v-else class="avatar-uploader-icon1">
                             <Plus />
                         </el-icon>
                     </el-upload>
                 </el-form-item>
             </el-form>
             <div flex justify-center>
-
-                <el-button type="primary" @click="" round w50>上传</el-button>
-
+                <el-button type="primary" @click="addPics" round w50>上传</el-button>
+                <el-button type="primary" @click="upPics" round w50>修改</el-button>
             </div>
-
-
         </el-dialog>
     </div>
 </template>
@@ -161,7 +158,8 @@
 import { onMounted, ref } from 'vue';
 import { getBanner, updateBanner } from '../../api/admin/banner'
 import { BannerEnums, PicEnums } from '../../enum/Enum'
-import { getPic, delPic } from '../../api/admin/pic'
+import { getPic, delPic, addPic, getPicClassify, upPic } from '../../api/admin/pic'
+import { ElMessage } from 'element-plus'
 
 const fineFoodList = ref([])
 const sceneryList = ref([])
@@ -212,13 +210,16 @@ const rules = ref(
 )
 
 onMounted(() => {
+    getIndex()
+})
+
+const getIndex = () => {
+
     getBanners()
     getFineFoodList()
     getSceneryList()
     getAboutMeList()
-})
-
-
+}
 
 // 获取轮播图
 const getBanners = () => {
@@ -228,7 +229,7 @@ const getBanners = () => {
 }
 // 获取美食图集列表
 const getFineFoodList = () => {
-    getPic(PicEnums.GOURMENT).then(
+    getPicClassify(PicEnums.GOURMENT).then(
         res => {
             fineFoodList.value = res.data
         }
@@ -236,7 +237,7 @@ const getFineFoodList = () => {
 }
 // 获取风景图集列表
 const getSceneryList = () => {
-    getPic(PicEnums.VIEW).then(
+    getPicClassify(PicEnums.VIEW).then(
         res => {
             sceneryList.value = res.data
         }
@@ -244,7 +245,7 @@ const getSceneryList = () => {
 }
 // 获取美食图集列表
 const getAboutMeList = () => {
-    getPic(PicEnums.ABOUT_ME).then(
+    getPicClassify(PicEnums.ABOUT_ME).then(
         res => {
             aboutMeList.value = res.data
         }
@@ -253,18 +254,16 @@ const getAboutMeList = () => {
 
 const delPicByUuid = uuid => {
     delPic(uuid).then(res => {
-        getFineFoodList()
-        getSceneryList()
-        getAboutMeList()
+        getIndex()
     })
 }
 
-
+//提交修改轮播图 ，
 const handleBannerSuccess = (response, uploadFile) => {
     formData.value.banner = response.data
 }
 const beforeBannerUpload = (rawFile) => {
-    if (rawFile.type !== 'image/*') {
+    if (!/^image\//.test(rawFile.type)) {
         ElMessage.error('上传的文件类型必须为图片')
         return false
     } else if (rawFile.size / 1024 / 1024 > 10) {
@@ -273,6 +272,13 @@ const beforeBannerUpload = (rawFile) => {
     }
     return true
 }
+const updateBanners = () => {
+    updateBanner(formData.value).then(res => { })
+}
+const submitForm = () => {
+    updateBanners()
+    getIndex()
+}
 
 
 
@@ -280,13 +286,12 @@ const beforeBannerUpload = (rawFile) => {
 // 添加图片弹窗
 const dialogVisible = ref(false)
 const addForm = ref({
-    title: '',
-    des: '',
-    isShow: false,
-    classify: '',
-    backImg: '',
+    title: '美丽的樱花树',
+    des: '漫步于樱花树下,浪迹天崖',
+    isShow: 1,
+    classify: 'pic_view',
+    url: 'https://xiaos-1314769426.cos.ap-nanjing.myqcloud.com/16865589574633.jpg',
 })
-
 
 const addFormRules = ref(
     {
@@ -300,16 +305,10 @@ const addFormRules = ref(
             message: '请输入描述',
             trigger: 'blur'
         }],
-        classify: [{
-            required: true,
-            message: '请选择分类',
-            trigger: 'change'
-        }],
     },
 
 
 )
-
 
 const classifyOptions = ref(
     [
@@ -328,10 +327,10 @@ const classifyOptions = ref(
     ],
 )
 const handleBannerSuccess1 = (response, uploadFile) => {
-    addForm.value.banner = response.data
+    addForm.value.url = response.data
 }
 const beforeBannerUpload1 = (rawFile) => {
-    if (rawFile.type !== 'image/*') {
+    if (!/^image\//.test(rawFile.type)) {
         ElMessage.error('上传的文件类型必须为图片')
         return false
     } else if (rawFile.size / 1024 / 1024 > 10) {
@@ -341,12 +340,34 @@ const beforeBannerUpload1 = (rawFile) => {
     return true
 }
 
-const updateBanners = () => {
-    updateBanner(formData.value).then(res => { })
+
+const addPics = () => {
+    addPic(addForm.value).then(res => {
+        dialogVisible.value = false
+        getIndex()
+    })
 }
-const submitForm = () => {
-    updateBanners()
+
+// 修改图片
+
+const openDiaVis = uuid => {
+    getPic(uuid).then(res => {
+        addForm.value = res.data
+        dialogVisible.value = true;
+        getIndex()
+    })
 }
+
+const upPics = () => {
+    delete addForm.value.updateTime
+    delete addForm.value.createTime
+    upPic(addForm.value).then(res => {
+        dialogVisible.value = false
+        getIndex()
+    })
+}
+
+
 </script>
 <style scoped>
 .avatar-uploader .avatar {
@@ -354,9 +375,28 @@ const submitForm = () => {
     height: 178px;
     display: block;
 }
+
+.avatar-uploader1 .avatar1 {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
 </style>
 
 <style>
+.avatar-uploader1 .el-upload {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader1 .el-upload:hover {
+    border-color: var(--el-color-primary);
+}
+
 .avatar-uploader .el-upload {
     border: 1px dashed var(--el-border-color);
     border-radius: 6px;
@@ -371,6 +411,18 @@ const submitForm = () => {
 }
 
 .el-icon.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    text-align: center;
+}
+
+.avatar-uploader1 .el-upload:hover {
+    border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon1 {
     font-size: 28px;
     color: #8c939d;
     width: 178px;

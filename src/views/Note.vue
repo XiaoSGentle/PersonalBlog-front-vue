@@ -106,7 +106,7 @@ const tagsTypes = ref(['success', 'danger', 'warning', 'info'])
 const goNoteDetial = param => {
     router.push('/noteView/' + param)
 }
-x
+
 // 查询的条件
 const searchParm = ref({
     pageNum: 1,
@@ -132,6 +132,8 @@ const radioGroupChange = value => {
 // 前端显示定义
 const selectRadioGroup = ref();
 
+//
+const noteList = ref({})
 // 获取笔记
 const getNote = () => {
     getAllNote(searchParm.value).then(res => {

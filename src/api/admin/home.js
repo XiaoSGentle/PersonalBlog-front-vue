@@ -9,7 +9,7 @@ export function getBlogInfo() {
 export function setBlogInfo(param) {
     return request({
         url: '/admin/home/blogInfo',
-        method: 'get',
+        method: 'post',
         data: param
     })
 }

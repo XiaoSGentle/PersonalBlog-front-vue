@@ -144,7 +144,7 @@ const handleBannerSuccess = (response, uploadFile) => {
     formData.value.backImg = response.data
 }
 const beforeBannerUpload = (rawFile) => {
-    if (rawFile.type !== 'image/*') {
+    if (!/^image\//.test(rawFile.type)) {
         ElMessage.error('上传的文件类型必须为图片')
         return false
     } else if (rawFile.size / 1024 / 1024 > 10) {

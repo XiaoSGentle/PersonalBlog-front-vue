@@ -47,6 +47,9 @@
 
                 </el-table-column> //一个表格列应该包含
             </el-table>
+            <div flex justify-end mt>
+                <el-button color="#626aef" @click="submitForm" round w50>上传</el-button>
+            </div>
         </div>
         <div class="admin-title">
             可供随机的名言
@@ -73,6 +76,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div flex justify-end mt>
+                <el-button type="primary" @click="submitForm" color="#626aef" round w50>添加</el-button>
+            </div>
         </div>
     </div>
 </template>
@@ -81,7 +87,7 @@
 import { ref, onMounted } from 'vue';
 import { getBaseUrl } from '../../utils/env';
 import { useStore } from 'vuex';
-import { getBlogInfo, getAllBgPic, getallSaying } from '../../api/admin/home'
+import { getBlogInfo, getAllBgPic, getallSaying, setBlogInfo } from '../../api/admin/home'
 const store = useStore()
 const bgImg = ref([])
 const sayIng = ref([])
@@ -146,7 +152,7 @@ const handleBannerSuccess = (response, uploadFile) => {
     formData.value.avatar = response.data
 }
 const beforeBannerUpload = (rawFile) => {
-    if (rawFile.type !== 'image/*') {
+    if (!/^image\//.test(rawFile.type)) {
         ElMessage.error('上传的文件类型必须为图片')
         return false
     } else if (rawFile.size / 1024 / 1024 > 10) {
@@ -156,12 +162,12 @@ const beforeBannerUpload = (rawFile) => {
     return true
 }
 
-// const elForm = ref('')
+const setBlogInfos = () => {
+    setBlogInfo(formData.value).then(res => { })
+}
 
 const submitForm = () => {
-    elForm.validate(valid => {
-        if (!valid) return
-    })
+    setBlogInfos()
 }
 
 </script>

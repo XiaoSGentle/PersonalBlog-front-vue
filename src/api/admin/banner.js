@@ -9,7 +9,7 @@ export function getBanner(param) {
 export function updateBanner(param) {
     return request({
         url: '/banner',
-        method: 'post',
+        method: 'put',
         data: param,
     })
 }
