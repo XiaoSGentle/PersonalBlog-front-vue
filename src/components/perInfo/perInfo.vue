@@ -155,8 +155,8 @@ const goMyNote = () => {
 }
 // 创建并跳转对话框
 const goAdmin = () => {
-    // router.push('/admin/statistical');
-    router.push('/admin/home');
+    router.push('/admin/statistical');
+    // router.push('/admin/home');
     emit('changeDrawerVisible')
 }
 

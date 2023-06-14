@@ -31,11 +31,9 @@
                                     </el-button>
                                 </div>
                             </div>
-
                         </div>
                     </el-card>
                 </div>
-
                 <el-divider border-style="dashed" />
                 <!--历史留言 -->
                 <div mb10>
@@ -85,9 +83,10 @@
                             </div>
                             <!-- 分页控制 -->
                             <div flex justify-center>
-                                <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
-                                    :page-sizes="[5, 10, 20, 50]" background layout="pager" :total="mesList.totalRows"
-                                    @size-change="getMes" @current-change="getMes" />
+                                <el-pagination v-model:current-page="pageParam.pageNum"
+                                    v-model:page-size="pageParam.pageSize" :page-sizes="[5, 10, 20, 50]" background
+                                    layout="pager" :total="mesList.totalRows" @size-change="getMes"
+                                    @current-change="getMes" />
                             </div>
                         </el-card>
                     </div>
@@ -102,31 +101,33 @@ import { ElMessage } from 'element-plus';
 import { onMounted, ref, watch } from 'vue';
 import { addMessage, getMessage } from '../api/message';
 import TopBanner from '../components/topBanner/index.vue';
-// banner的参数定义
-const childProps = ref({
-    height: 370,
-    backImg: 'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/msg-top-bg.png',
-    icon: 'Promotion',
-    title: '留言板',
-    content: [
-        '在这里您可以写下你想对我说的话,或者对本网站有什么好的建议。',
-        '我会认真看完每条留言。期待与您的邂逅。',
-    ]
+// banner部分
+const childProps = ref({})
+import { getBanner } from '../api/admin/banner'
+import { BannerEnums } from '../enum/Enum'
+const getTopBanner = () => {
+    getBanner(BannerEnums.MESSAGE).then(res => {
+        childProps.value = res.data
+    })
+}
+onMounted(() => {
+    getTopBanner()
 })
+
 
 // 获取留言部分
 const mesList = ref({
     totalRows: 0
 })
 // 分页参数
-const pageParm = ref({
+const pageParam = ref({
     pageNum: 1,
     pageSize: 10
 })
 onMounted(() => {
     getMes()
 })
-const getMes = () => getMessage(pageParm.value).then(res => {
+const getMes = () => getMessage(pageParam.value).then(res => {
     mesList.value = res.data;
 })
 

@@ -37,7 +37,7 @@
         </div>
 
         <div class="admin-title">笔记列表</div>
-        <el-table :data="myNoteList.data" style="width: 100%">
+        <el-table :data="myNoteList.data" style="width: 100%" border>
             <el-table-column prop="uuid" label="uuid"></el-table-column>
             <el-table-column prop="creatorUuid" label="创建者ID"></el-table-column>
             <el-table-column prop="classificationUuid" label="分类" width='100' sortable>
@@ -51,7 +51,7 @@
                 <template #default="scope">
                     <div h6>
 
-                        <el-tag v-for="(tag, index) in scope.row.tags.split(',')" effect="dark" :type="tagsTypes[index]"
+                        <el-tag v-for="(tag, index) in scope.row.tags.split(',')" effect="dark" :type="tagsTypes[index]" :key="index"
                             round ml1>
                             {{ tag }}
                         </el-tag>

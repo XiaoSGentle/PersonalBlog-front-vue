@@ -32,11 +32,12 @@
                 </div>
             </el-form>
         </div>
-        <div flex justify-end mt>
-            <el-button color="#626aef" round w50 @click="dialogVisible = !dialogVisible">上传图片</el-button>
+        <div flex justify-between mt>
+            <div class="admin-title">美食图片列表</div>
+            <el-button color="#626aef" round w30 @click="dialogVisible = !dialogVisible">上传图片</el-button>
         </div>
-        <div class="admin-title">美食图片列表</div>
-        <el-table :data="fineFoodList" style="width: 100%" center>
+
+        <el-table :data="fineFoodList" style="width: 100%" border>
             <el-table-column prop="uuid" label="uuid" width="160"></el-table-column>
             <el-table-column prop="title" label="标题"></el-table-column>
             <el-table-column prop="des" label="描述"></el-table-column>
@@ -63,7 +64,7 @@
             </el-table-column>
         </el-table>
         <div class="admin-title">风景图片列表</div>
-        <el-table :data="sceneryList" style="width: 100%" center>
+        <el-table :data="sceneryList" style="width: 100%" border>
             <el-table-column prop="uuid" label="uuid" width="160"></el-table-column>
             <el-table-column prop="title" label="标题"></el-table-column>
             <el-table-column prop="des" label="描述"></el-table-column>
@@ -90,7 +91,7 @@
             </el-table-column>
         </el-table>
         <div class="admin-title">关于我图片列表</div>
-        <el-table :data="aboutMeList" style="width: 100%" center>
+        <el-table :data="aboutMeList" style="width: 100%" border>
             <el-table-column prop="uuid" label="uuid" width="160"></el-table-column>
             <el-table-column prop="title" label="标题"></el-table-column>
             <el-table-column prop="des" label="描述"></el-table-column>

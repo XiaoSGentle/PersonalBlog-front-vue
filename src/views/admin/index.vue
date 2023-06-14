@@ -14,7 +14,7 @@
         </el-header>
         <el-container>
             <el-aside :width="isCollapse ? '64px' : '200px'" duration-400 ease-in-out>
-                <el-menu h93vh router :collapse="isCollapse" default-active="/admin/home">
+                <el-menu h93vh router :collapse="isCollapse" default-active="/admin/statistical">
                     <!-- 侧边栏控制按钮 -->
                     <div @click="isCollapse = !isCollapse" duration-400 ease-in-out hover:bg-gray-2
                         :style="{ width: isCollapse ? ' 64px' : '200px' }">
@@ -72,6 +72,12 @@
                         </el-icon>
                         <template #title>日志管理</template>
                     </el-menu-item>
+                    <el-menu-item index="/admin/rbac">
+                        <el-icon>
+                            <User />
+                        </el-icon>
+                        <template #title>权限管理</template>
+                    </el-menu-item>
                     <el-menu-item index="/admin/setting">
                         <el-icon>
                             <setting />
@@ -100,16 +106,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-
-
 const isCollapse = ref(true)
-
 const router = useRouter()
-
 const goBackHome = () => { router.push('/') }
 
 </script>
-
 
 <style scoped>
 .el-main {

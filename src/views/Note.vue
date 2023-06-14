@@ -79,16 +79,17 @@ import TopBanner from '../components/topBanner/index.vue';
 
 
 const router = useRouter()
-// banner的参数定义
-const childProps = ref({
-    height: 370,
-    backImg: 'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/note-banner-bg.jpg',
-    icon: 'Notebook',
-    title: '笔记',
-    content: [
-        '闲言碎语,日常牢骚,学习记录...',
-        '既是过往,也是回忆',
-    ]
+// banner部分
+const childProps = ref({})
+import { getBanner } from '../api/admin/banner'
+import { BannerEnums } from '../enum/Enum'
+const getTopBanner = () => {
+    getBanner(BannerEnums.NOTE).then(res => {
+        childProps.value = res.data
+    })
+}
+onMounted(() => {
+    getTopBanner()
 })
 
 // 笔记分类

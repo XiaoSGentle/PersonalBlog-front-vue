@@ -7,7 +7,7 @@
             </el-header>
             <!--主题 -->
             <div>
-                <el-main min-h100vh>
+                <el-main>
                     <router-view v-slot="{ Component }" style="background-color: var(--el-color-white);">
                         <transition name="fade">
                             <component :is="Component" />

@@ -59,20 +59,21 @@
 
 <script setup>
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import TopBanner from '../components/topBanner/index.vue'
 
 
-// banner的参数定义
-const childProps = ref({
-    height: 370,
-    backImg: 'https:xiaos-1314769426.cos.ap-nanjing.myqcloud.com/top-bg.png',
-    icon: 'Camera',
-    title: '图集',
-    content: [
-        '这里承载了我的所有回忆,记录着我的点点滴滴.',
-        '珍惜当下、热爱、感悟...'
-    ]
+// banner部分
+const childProps = ref({})
+import { getBanner } from '../api/admin/banner'
+import { BannerEnums } from '../enum/Enum'
+const getTopBanner = () => {
+    getBanner(BannerEnums.PIC).then(res => {
+        childProps.value = res.data
+    })
+}
+onMounted(() => {
+    getTopBanner()
 })
 
 

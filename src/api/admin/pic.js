@@ -9,7 +9,7 @@ export function getPicClassify(param) {
 export function delPic(param) {
     return request({
         url: '/admin/pic/' + param,
-        method: 'delete'
+        method: 'DELETE'
     })
 }
 export function addPic(param) {

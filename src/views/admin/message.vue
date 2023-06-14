@@ -35,7 +35,7 @@
         </div>
 
         <div class="admin-title">留言列表</div>
-        <el-table :data="mesList.data" style="width: 100%" center>
+        <el-table :data="mesList.data" style="width: 100%" border>
             <el-table-column prop="uuid" label="uuid"></el-table-column> //按顺序显示
             <el-table-column prop="name" label="姓名" width="150"></el-table-column> //按顺序显示
             <el-table-column prop="avatar" label="头像" width="80">
@@ -55,7 +55,7 @@
             </el-table-column> //一个表格列应该包含
         </el-table>
         <div flex justify-center mt mb>
-            <el-pagination v-model:current-page="pageParm.pageNum" v-model:page-size="pageParm.pageSize"
+            <el-pagination v-model:current-page="pageParam.pageNum" v-model:page-size="pageParam.pageSize"
                 :page-sizes="[5, 10, 20, 50]" background layout="pager" :total="mesList.totalRows" @size-change="getMes"
                 @current-change="getMes" />
         </div>
@@ -99,11 +99,11 @@ const getBanners = () => {
 
 
 // 分页参数
-const pageParm = ref({
+const pageParam = ref({
     pageNum: 1,
     pageSize: 10
 })
-const getMes = () => getMessage(pageParm.value).then(res => {
+const getMes = () => getMessage(pageParam.value).then(res => {
     mesList.value = res.data;
 })
 const rules = ref(

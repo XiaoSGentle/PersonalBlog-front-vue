@@ -31,6 +31,7 @@ const routes = [
       { path: '/admin/message', component: () => import('../views/admin/message.vue') },
       { path: '/admin/log', component: () => import('../views/admin/log.vue') },
       { path: '/admin/setting', component: () => import('../views/admin/setting.vue') },
+      { path: '/admin/rbac', component: () => import('../views/admin/rbac.vue') },
     ]
   }
 

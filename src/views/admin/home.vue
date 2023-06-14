@@ -29,31 +29,38 @@
             </el-form>
 
         </div>
-        <div class="admin-title">
-            主页随机的背景
+        <el-divider />
+        <div flex justify-between>
+            <div class="admin-title">
+                主页随机的背景
+            </div>
+            <el-button color="#626aef" @click="upLoadPic" round w30>上传</el-button>
         </div>
         <div>
             <el-table :data="bgImg" style="width: 100%" border>
-                <el-table-column prop="uuid" label="uuid"></el-table-column> //按顺序显示
+                <el-table-column prop="uuid" label="uuid"></el-table-column>
                 <el-table-column label="图片">
                     <template #default="scope">
                         <el-image style="width: 200px; height: 100px" :src="scope.row.backImg" />
                     </template>
-                </el-table-column> //按顺序显示
+                </el-table-column>
                 <el-table-column label="操作">
                     <template #default="scope">
-                        <el-link type="primary"> 删除</el-link>
+                        <el-link type="primary" @click="delHomeBannerByUuid(scope.row.uuid)"> 删除</el-link>
                     </template>
 
-                </el-table-column> //一个表格列应该包含
+                </el-table-column>
             </el-table>
-            <div flex justify-end mt>
-                <el-button color="#626aef" @click="submitForm" round w50>上传</el-button>
+        </div>
+
+        <el-divider />
+        <div flex justify-between>
+            <div class="admin-title">
+                可供随机的名言
             </div>
+            <el-button type="primary" color="#626aef" round w30 @click="addSayingDiaVis = !addSayingDiaVis">添加</el-button>
         </div>
-        <div class="admin-title">
-            可供随机的名言
-        </div>
+
         <div mb10>
             <el-table :data="sayIng" style="width: 100%" border>
                 <el-table-column prop="uuid" label="uuid" width="150"></el-table-column>
@@ -64,22 +71,47 @@
                             {{ scope.row.pos === 'myself' ? '理想自己' : '名言警句' }}
                         </el-tag>
                     </template>
-                </el-table-column> //按顺序显示
+                </el-table-column>
                 <el-table-column prop="content" label="内容"></el-table-column>
                 <el-table-column prop="author" label="作者" width="120"></el-table-column>
                 <el-table-column prop="des" label="描述"></el-table-column>
                 <el-table-column prop="updateTime" label="添加时间" sortable></el-table-column>
                 <el-table-column label="操作" width="150">
                     <template #default="scope">
-                        <el-link type="primary"> 修改</el-link>
-                        <el-link ml type="primary"> 删除</el-link>
+                        <el-link type="primary" @click="openSayingForm(scope.row.uuid)"> 修改</el-link>
+                        <el-link ml type="primary" @click="delSayingM(scope.row.uuid)"> 删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
-            <div flex justify-end mt>
-                <el-button type="primary" @click="submitForm" color="#626aef" round w50>添加</el-button>
-            </div>
         </div>
+        <input h0 type="file" ref="upLoadInput" accept=".jpg,.png,.gif,.jpeg" @change="handleFileChange">
+        <el-dialog v-model="addSayingDiaVis" title="添加或者修改名言" :width="800">
+            <el-form :model="addSaingyForm" :rules="addSaingyFormRules" label-width="100px">
+                <el-form-item label="名言内容" prop="content">
+                    <el-input v-model="addSaingyForm.content" placeholder="请输入banner名言内容" clearable
+                        :style="{ width: '100%' }"></el-input>
+                </el-form-item>
+                <el-form-item label="解释" prop="des">
+                    <el-input v-model="addSaingyForm.des" type="textarea" placeholder="请输入解释"
+                        :autosize="{ minRows: 4, maxRows: 4 }" :style="{ width: '100%' }"></el-input>
+                </el-form-item>
+                <el-form-item label="作者" prop="author">
+                    <el-input v-model="addSaingyForm.author" placeholder="请输入作者" clearable :style="{ width: '100%' }">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="分类">
+                    <el-select v-model="addSaingyForm.pos" placeholder="请选择分类" :style="{ width: '100%' }">
+                        <el-option v-for="(item, index) in posOptions" :key="index" :label="item.label"
+                            :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div flex justify-center>
+                <el-button round type="warning" w20 @click="upSayingM"> 修改</el-button>
+                <el-button round type="primary" w20 @click="addSayingM"> 添加</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
@@ -124,13 +156,14 @@ onMounted(() => {
 })
 
 
+
 // 获取主页信息
 const getInfo = () => {
     getBlogInfo().then(res => {
         formData.value = res.data
     })
 }
-// 获取所有可供随机的北京图片
+// 获取所有可供随机的背景图片
 const getAllBgPics = () => {
     getAllBgPic().then(res => {
         bgImg.value = res.data
@@ -165,14 +198,100 @@ const beforeBannerUpload = (rawFile) => {
 const setBlogInfos = () => {
     setBlogInfo(formData.value).then(res => { })
 }
-
 const submitForm = () => {
     setBlogInfos()
 }
+// 上传Input
+import { upload } from '../../api/file'
+import { addHomeBanner, delHomeBanner } from '../../api/admin/banner'
+const upLoadInput = ref('')
+const upLoadPic = () => {
+    if (upLoadInput.value) {
+        upLoadInput.value.click()
+    }
+}
+const handleFileChange = event => {
+    upload(event.target.files).then(res => {
+        addHomeBanner({ url: res.data }).then(resp => {
+            getAllBgPics()
+        })
+    }
+    )
+}
+
+const delHomeBannerByUuid = uuid => {
+    delHomeBanner(uuid).then(res => { getAllBgPics() })
+}
+
+// 添加名言
+const addSayingDiaVis = ref(false)
+
+const addSaingyForm = ref({
+    content: '',
+    des: '',
+    author: '',
+    pos: '',
+})
+
+const addSaingyFormRules = ref(
+    {
+        content: [{
+            required: true,
+            message: '请输入banner名言内容',
+            trigger: 'blur'
+        }],
+        des: [{
+            required: true,
+            message: '请输入解释',
+            trigger: 'blur'
+        }],
+        author: [{
+            required: true,
+            message: '请输入作者',
+            trigger: 'blur'
+        }],
+    })
+const posOptions = ref([
+    {
+        label: "自己感悟",
+        value: "myself"
+    },
+    {
+        label: "名言警句",
+        value: "saying"
+    }
+])
+
+import { delSaying, upSaying, addSaying, getSaying } from '../../api/admin/home'
+
+const addSayingM = () => {
+    addSaying(addSaingyForm.value).then(res => {
+        addSayingDiaVis.value = false
+        getallSayings()
+    })
+
+}
+const delSayingM = uuid => {
+    delSaying(uuid).then(res => { getallSayings() })
+}
+const upSayingM = () => {
+    delete addSaingyForm.del
+    upSaying(addSaingyForm.value).then(res => {
+        addSayingDiaVis.value = false
+    })
+}
+const openSayingForm = uuid => {
+    getSaying(uuid).then(
+        res => {
+            addSaingyForm.value = res.data
+            addSayingDiaVis.value = true
+        }
+    )
+}
+
+
 
 </script>
-
-
 <style scoped>
 .avatar-uploader .avatar {
     width: 178px;

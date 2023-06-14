@@ -29,7 +29,33 @@ export function getallSaying(param) {
     })
 }
 
+export function delSaying(param) {
+    return request({
+        url: '/admin/home/saying/' + param,
+        method: 'DELETE'
+    })
+}
 
 
+export function upSaying(param) {
+    return request({
+        url: '/admin/home/saying/',
+        method: 'put',
+        data: param
+    })
+}
 
+export function addSaying(param) {
+    return request({
+        url: '/admin/home/saying/',
+        method: 'post',
+        data: param
+    })
+}
+export function getSaying(param) {
+    return request({
+        url: '/admin/home/saying/' + param,
+        method: 'get'
+    })
+}
 

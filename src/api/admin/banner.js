@@ -13,8 +13,19 @@ export function updateBanner(param) {
         data: param,
     })
 }
-
-
+export function addHomeBanner(param) {
+    return request({
+        url: '/banner',
+        method: 'post',
+        data: param
+    })
+}
+export function delHomeBanner(param) {
+    return request({
+        url: '/banner/' + param,
+        method: 'DELETE'
+    })
+}
 
 
 

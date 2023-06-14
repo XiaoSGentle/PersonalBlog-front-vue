@@ -13,7 +13,7 @@
                             </div>
                             <span> {{ title }}</span>
                         </div>
-                        <div font-bold text-white text-4 text-center mt4 v-for="( item, index ) in  content " :key="index">
+                        <div font-bold text-white text-4 text-center mt4 v-for="item in contentSplit(content)">
                             {{ item }}
                         </div>
                     </div>
@@ -45,15 +45,16 @@ const props = defineProps({
         default: '标题',
     },
     content: {
-        type: Array,
-        default: [
-            '第一行文字',
-            '第二行文字'
-        ]
+        type: String,
+        default: '正在加载！。请稍后',
     }
 })
 // 解构出参数
 const { height, backImg, icon, title, content } = toRefs(props)
+
+const contentSplit = param => {
+    return param.split('。');
+}
 
 
 </script>
