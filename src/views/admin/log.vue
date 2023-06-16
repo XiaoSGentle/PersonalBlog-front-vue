@@ -32,7 +32,7 @@ const logList = ref({})
 
 const pageParam = ref({
     pageNum: 1,
-    pageSize: 10
+    pageSize: 15
 })
 
 onMounted(() => {

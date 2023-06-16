@@ -275,9 +275,9 @@ const delSayingM = uuid => {
     delSaying(uuid).then(res => { getallSayings() })
 }
 const upSayingM = () => {
-    delete addSaingyForm.del
     upSaying(addSaingyForm.value).then(res => {
         addSayingDiaVis.value = false
+        getallSayings()
     })
 }
 const openSayingForm = uuid => {
@@ -285,6 +285,9 @@ const openSayingForm = uuid => {
         res => {
             addSaingyForm.value = res.data
             addSayingDiaVis.value = true
+            delete addSaingyForm.value.del
+            delete addSaingyForm.value.createTime
+            delete addSaingyForm.value.updateTime
         }
     )
 }

@@ -1,5 +1,204 @@
 <template>
-    <div>
-        rbac
+    <div flex>
+        <el-menu default-active="admin">
+            <el-menu-item @click="selectMenu" v-for="(item, index) in departs" :index="item.role" :key="index">
+                <template #title>{{ item.name }}</template>
+
+            </el-menu-item>
+            <el-menu-item>
+                <el-icon>
+                    <Plus />
+                </el-icon>
+                <template #title>添加部门</template>
+            </el-menu-item>
+        </el-menu>
+        <div class="w100%" flex>
+            <div class="w50%" p3>
+                <div class="admin-title">权限列表</div>
+                <div h80vh>
+                    <el-table ref="RefRouter" height="82vh" :data="routers" style="width: 100%"
+                        @select="handleRouterSelectionChange" @select-all="handleRouterSelectionChange">
+                        <el-table-column type="selection" width="55" />
+                        <el-table-column prop="v2" label="描述" sortable />
+                        <el-table-column prop="v0" label="路由" sortable />
+
+                    </el-table>
+                </div>
+            </div>
+            <div class="w50%" style="border-left:2px solid rgb(65, 65, 65)" p3>
+                <div flex justify-between>
+                    <div class="admin-title">用户列表</div>
+                    <div><el-button round mt4 w30 type="success" @click="openuserSelectDialog">添加</el-button></div>
+                </div>
+                <el-table height="82vh" :data="users" style="width: 100%" empty-text="该部门没有人员哦！">
+                    <el-table-column prop="v0" label="用户id" sortable />
+                    <el-table-column prop="v2" label="昵称" sortable />
+                    <el-table-column label="操作">
+                        <template #default>
+                            <el-button link type="danger" size="small" @click="">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+
+
+        <div>
+            <el-dialog v-model="userSelectDialogVis" title="选择人员" width="50%">
+                <el-table @select="handleUserSelectionChange" @select-all="handleUserSelectionChange" ref="selectUserForm"
+                    :data="allUsers" style="width: 100%">
+                    <el-table-column type="selection" width="55" />
+                    <el-table-column prop="uuid" label="用户id" sortable />
+                    <el-table-column prop="nickname" label="昵称" sortable />
+                    <el-table-column prop="createTime" label="创建时间" sortable />
+                </el-table>
+                <div flex justify-center>
+                    <el-button round w50 mt @click="addUserBtnClick">
+                        新增
+                    </el-button>
+                </div>
+            </el-dialog>
+        </div>
     </div>
 </template>
+
+
+<script setup>
+import { addUserForDepart, getAllDepart, getRoutersByDepart, getUserByDepart, getAllRouter, addRouterForDepart, getAllUser } from '../../api/admin/rbac'
+import { ElLoading } from 'element-plus'
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+const departs = ref([])
+const routers = ref([])
+const users = ref([])
+const selectDepart = ref('admin')
+onMounted(async () => {
+    await getAllRouters();
+    getAllDeparts()
+})
+
+// 获取数据方法
+const getAllDeparts = async () => {
+    await getAllDepart().then(async res => {
+        departs.value = res.data
+        await getRoutersByDeparts(departs.value[0].role)
+        getUserByDeparts(departs.value[0].role)
+    })
+
+}
+const RefRouter = ref()
+/**
+ * 根据部门获取路由
+ */
+const getRoutersByDeparts = async departName => {
+    const loadingInstance = ElLoading.service({ text: '加载中,请稍后...' })
+    await getRoutersByDepart(departName).then(selectRouters => {
+        routers.value.forEach(allRouter => {
+            selectRouters.data.forEach(selectRouter => {
+                if (allRouter.v0 === selectRouter.v0) {
+                    RefRouter.value.toggleRowSelection(allRouter, true);
+                }
+            });
+        })
+
+    })
+    loadingInstance.close()
+}
+/**
+ * 根据部门获取该部门用户
+ */
+const getUserByDeparts = departName => {
+    getUserByDepart(departName).then(res => {
+        users.value = res.data
+    })
+}
+// 获取所有的路由
+const getAllRouters = () => {
+    getAllRouter().then(res => {
+        routers.value = res.data
+    })
+}
+
+// 多选框选择事件
+const handleRouterSelectionChange = async param => {
+    const loadingInstance = ElLoading.service({ text: '加载中,请稍后...' })
+    if (param.length === 0) {
+        param = [{ v1: selectDepart.value + '_url' }]
+    }
+    const req = JSON.parse(JSON.stringify(param));
+    req.forEach(item => {
+        item.id = item.id + '::' + selectDepart.value
+        item.ptype = 'g2'
+        item.v1 = selectDepart.value + '_url'
+        item.v2 = null
+    })
+    await addRouterForDepart(req).then(res => {
+        console.log(res);
+    })
+    loadingInstance.close()
+}
+// 部门切换事件
+const selectMenu = param => {
+    selectDepart.value = param.index
+    toggleSelection()
+    getRoutersByDeparts(param.index)
+    getUserByDeparts(param.index)
+}
+// 取消全部选择
+const toggleSelection = () => {
+    RefRouter.value.clearSelection()
+}
+
+// 定义添加对话框数据
+const userSelectDialogVis = ref(false);
+const allUsers = ref([]);
+// 打开选择用户对话框
+const openuserSelectDialog = async () => {
+    await getAllUsers()
+    userSelectDialogVis.value = !userSelectDialogVis.value
+}
+// 获取所有用户
+const selectUserForm = ref()
+const getAllUsers = () => {
+    const loadingInstance = ElLoading.service({ text: '加载中,请稍后...' })
+    getAllUser().then(res => {
+        allUsers.value = res.data
+        allUsers.value.forEach((allUser, index) => {
+            users.value.forEach(selectUser => {
+                if (allUser.uuid === selectUser.v0) {
+                    allUsers.value.splice(index, index + 1)
+                }
+            });
+        })
+        loadingInstance.close()
+    })
+
+}
+//  多选框选择添加用户事件
+const selectUsers = ref([])
+const handleUserSelectionChange = async param => {
+    selectUsers.value = param
+}
+
+const addUserBtnClick = async () => {
+    if (selectUsers.value.length === 0) {
+        ElMessage.warning("您还未选择数据")
+        return
+    }
+    const loadingInstance = ElLoading.service({ text: '加载中,请稍后...' })
+    const req = []
+    selectUsers.value.forEach(user => {
+        const reqItem = {}
+        reqItem.id = selectDepart.value + '::' + user.uuid
+        reqItem.ptype = 'g'
+        reqItem.v0 = user.uuid
+        reqItem.v1 = selectDepart.value
+        reqItem.v2 = user.nickname
+        req.push(reqItem);
+    })
+    await addUserForDepart(req).then(res => {
+        userSelectDialogVis.value = !userSelectDialogVis.value
+    })
+    loadingInstance.close()
+}
+</script>

@@ -88,7 +88,7 @@
                 </el-menu>
             </el-aside>
             <el-main>
-                <div class="w90%" ma>
+                <div>
                     <router-view min-h90vh h93vh overflow-auto v-slot="{ Component }"
                         style="background-color: var(--el-color-white);">
                         <transition name="fade">
