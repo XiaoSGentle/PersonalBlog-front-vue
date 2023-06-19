@@ -25,12 +25,15 @@
             <div class="w50%" p3>
                 <div class="admin-title">权限列表</div>
                 <div h80vh>
-                    <el-table ref="RefRouter" height="82vh" :data="routers" style="width: 100%"
-                        @select="handleRouterSelectionChange" @select-all="handleRouterSelectionChange">
-                        <el-table-column type="selection" width="55" />
-                        <el-table-column prop="v2" label="描述" sortable />
-                        <el-table-column prop="v0" label="路由" sortable />
-
+                    <el-table ref="RefRouter" height="82vh" :data="routers" style="width: 100%">
+                        <el-table-column prop="v3" label="描述" sortable width="300" />
+                        <el-table-column prop="v1" label="路由" sortable />
+                        <el-table-column label="权限状态" width="200">
+                            <template #default="scope">
+                                <el-switch @click="switchChange(scope.row)" :disabled="selectDepart === 'admin'"
+                                    v-model="scope.row.v4" />
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </div>
             </div>
@@ -92,33 +95,41 @@ const departs = ref([])
 const routers = ref([])
 const users = ref([])
 const selectDepart = ref('admin')
-onMounted(async () => {
-    getAllRouters();
-    getAllDeparts()
-})
 
+onMounted(async () => {
+    await getAllDeparts()
+    getAllRouters();
+
+})
 // 获取数据方法
 const getAllDeparts = async () => {
     await getAllDepart().then(async res => {
         departs.value = res.data
-        await getRoutersByDeparts(departs.value[0].role)
-        getUserByDeparts(departs.value[0].role)
+        selectDepart.value = departs.value[0].role
+        getUserByDeparts(selectDepart.value)
     })
 
 }
 const RefRouter = ref()
+
 /**
  * 根据部门获取路由
  */
 const getRoutersByDeparts = async departName => {
     const loadingInstance = ElLoading.service({ text: '加载中,请稍后...' })
-    await getRoutersByDepart(departName).then(selectRouters => {
+    await getRoutersByDepart(departName).then(openRouters => {
         routers.value.forEach(allRouter => {
-            selectRouters.data.forEach(selectRouter => {
-                if (allRouter.v0 === selectRouter.v0) {
-                    RefRouter.value.toggleRowSelection(allRouter, true);
+            allRouter.v4 = false
+            for (let i = 0; i < openRouters.data.length; i++) {
+                const openRouter = openRouters.data[i];
+                if (allRouter.v1 === openRouter.v1) {
+                    allRouter.v4 = true;
+                    allRouter.id = openRouter.id;
+                    break;
+                } else {
+                    allRouter.v4 = false;
                 }
-            });
+            }
         })
 
     })
@@ -133,42 +144,31 @@ const getUserByDeparts = departName => {
     })
 }
 // 获取所有的路由
-const getAllRouters = () => {
-    getAllRouter().then(res => {
+const getAllRouters = async () => {
+    await getAllRouter().then(async res => {
         routers.value = res.data
+        getRoutersByDeparts(selectDepart.value)
     })
 }
 
-// 多选框选择事件
-const handleRouterSelectionChange = async param => {
+// switchChange事件
+const switchChange = async (param) => {
     const loadingInstance = ElLoading.service({ text: '加载中,请稍后...' })
-    if (param.length === 0) {
-        param = [{ v1: selectDepart.value + '_url' }]
+    if (param.v4) {
+        addRouterForDepart({ departName: selectDepart.value, routerName: param.v1 }).then(res => { })
+        setTimeout(() => { getRoutersByDeparts(selectDepart.value) }, 500);
+    } else {
+        delCasbinRule(param.id).then(res => { })
     }
-    const req = JSON.parse(JSON.stringify(param));
-    req.forEach(item => {
-        item.id = item.id + '::' + selectDepart.value
-        item.ptype = 'g2'
-        item.v1 = selectDepart.value + '_url'
-        item.v2 = null
-    })
-    await addRouterForDepart(req).then(res => {
-        console.log(res);
-    })
+
     loadingInstance.close()
 }
 // 部门切换事件
 const selectMenu = param => {
     selectDepart.value = param.index
-    toggleSelection()
     getRoutersByDeparts(param.index)
     getUserByDeparts(param.index)
 }
-// 取消全部选择
-const toggleSelection = () => {
-    RefRouter.value.clearSelection()
-}
-
 // 定义添加对话框数据
 const userSelectDialogVis = ref(false);
 const allUsers = ref([]);
@@ -206,16 +206,10 @@ const addUserBtnClick = async () => {
         return
     }
     const loadingInstance = ElLoading.service({ text: '加载中,请稍后...' })
-    const req = []
-    selectUsers.value.forEach(user => {
-        const reqItem = {}
-        reqItem.id = selectDepart.value + '::' + user.uuid
-        reqItem.ptype = 'g'
-        reqItem.v0 = user.uuid
-        reqItem.v1 = selectDepart.value
-        reqItem.v2 = user.nickname
-        req.push(reqItem);
-    })
+    const req = {
+        departName: selectDepart.value,
+        users: selectUsers.value
+    }
     await addUserForDepart(req).then(res => {
         userSelectDialogVis.value = !userSelectDialogVis.value
         getUserByDeparts(selectDepart.value)

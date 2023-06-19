@@ -33,17 +33,8 @@
                 <IconDocument></IconDocument>
                 <div text-center>我的文章</div>
             </div>
-            <!-- 
-            <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
-                <IconCollect></IconCollect>
-                <div text-center>我的收藏</div>
-            </div>
-            <div p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
-                <IconSetting></IconSetting>
-                <div text-center>修改信息</div>
-            </div> 
-            -->
-            <div @click="goAdmin" p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out duration-300>
+            <div v-if="showBack" @click="goAdmin" p6 border-1 border-solid border-blueGray-2 hover:bg-blueGray-1 ease-in-out
+                duration-300>
                 <IconSetting></IconSetting>
                 <div text-center>后台管理</div>
             </div>
@@ -97,10 +88,11 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
-import { defineEmits, ref } from 'vue';
+import { defineEmits, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { addNote, getAllNoteClassify } from '../../api/note';
+import { getAuthority } from '../../api/user';
 import { getBaseUrl } from '../../utils/env';
 import IconDocument from '../icons/login/IconDocument.vue';
 import IconExit from '../icons/login/IconExit.vue';
@@ -126,6 +118,14 @@ const userInfo = ref({
     birthday: '',
 })
 userInfo.value = store.state.userInfo
+
+const showBack = ref(false)
+
+onMounted(async () => {
+    await getAuthority().then(res => {
+        showBack.value = res.data.toString().includes('admin')
+    })
+})
 
 // 跳转登录
 const loginOut = () => {

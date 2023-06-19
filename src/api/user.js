@@ -19,3 +19,9 @@ export function Register(param) {
 
 
 
+export function getAuthority(param) {
+    return request({
+        url: '/getAuthority',
+        method: 'get'
+    })
+}

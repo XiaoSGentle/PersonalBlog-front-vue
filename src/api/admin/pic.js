@@ -2,7 +2,7 @@ import request from '../../utils/request'
 
 export function getPicClassify(param) {
     return request({
-        url: '/admin/pic/classify/?classify=' + param,
+        url: '/admin/pic/classify?classify=' + param,
         method: 'get'
     })
 }
