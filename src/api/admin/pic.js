@@ -8,13 +8,13 @@ export function getPicClassify(param) {
 }
 export function delPic(param) {
     return request({
-        url: '/admin/pic/' + param,
+        url: '/admin/pic?uuid=' + param,
         method: 'DELETE'
     })
 }
 export function addPic(param) {
     return request({
-        url: '/admin/pic/',
+        url: '/admin/pic',
         method: 'post',
         data: param,
     })
@@ -22,13 +22,13 @@ export function addPic(param) {
 
 export function getPic(param) {
     return request({
-        url: '/admin/pic/' + param,
+        url: '/admin/pic?uuid=' + param,
         method: 'get'
     })
 }
 export function upPic(param) {
     return request({
-        url: '/admin/pic/',
+        url: '/admin/pic',
         method: 'put',
         data: param,
     })

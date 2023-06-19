@@ -22,7 +22,7 @@ export function addHomeBanner(param) {
 }
 export function delHomeBanner(param) {
     return request({
-        url: '/banner/' + param,
+        url: '/banner?uuid=' + param,
         method: 'DELETE'
     })
 }

@@ -1,9 +1,22 @@
 import request from '../../utils/request'
 
+export function resetAuthority() {
+    return request({
+        url: '/admin/authority',
+        method: 'put'
+    })
+}
 export function getAllDepart() {
     return request({
         url: '/admin/authority/depart',
         method: 'get'
+    })
+}
+export function addDepart(param) {
+    return request({
+        url: '/admin/authority/depart',
+        method: 'post',
+        data: param,
     })
 }
 export function getRoutersByDepart(data) {
@@ -41,7 +54,13 @@ export function addUserForDepart(param) {
 }
 export function getAllUser() {
     return request({
-        url: '/admin/user/',
+        url: '/admin/user',
         method: 'get',
+    })
+}
+export function delCasbinRule(param) {
+    return request({
+        url: '/admin/authority/depart?uuid=' + param,
+        method: 'delete',
     })
 }

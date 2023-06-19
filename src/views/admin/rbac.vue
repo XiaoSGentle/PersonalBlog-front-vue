@@ -3,13 +3,22 @@
         <el-menu default-active="admin">
             <el-menu-item @click="selectMenu" v-for="(item, index) in departs" :index="item.role" :key="index">
                 <template #title>{{ item.name }}</template>
-
             </el-menu-item>
-            <el-menu-item>
+            <el-menu-item @click="addDepartDialogVis = !addDepartDialogVis">
                 <el-icon>
                     <Plus />
                 </el-icon>
-                <template #title>添加部门</template>
+                <template #title>
+                    添加部门
+                </template>
+            </el-menu-item>
+            <el-menu-item @click="resetAuthorityBtnClick">
+                <el-icon>
+                    <RefreshRight />
+                </el-icon>
+                <template #title>
+                    重置部门权限
+                </template>
             </el-menu-item>
         </el-menu>
         <div class="w100%" flex>
@@ -34,8 +43,8 @@
                     <el-table-column prop="v0" label="用户id" sortable />
                     <el-table-column prop="v2" label="昵称" sortable />
                     <el-table-column label="操作">
-                        <template #default>
-                            <el-button link type="danger" size="small" @click="">删除</el-button>
+                        <template #default="scope">
+                            <el-button link type="danger" size="small" @click="delCasbinRules(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -59,21 +68,32 @@
                 </div>
             </el-dialog>
         </div>
+        <div>
+            <el-dialog v-model="addDepartDialogVis" title="添加部门" width="30%">
+                <el-input placeholder="部门名称" v-model="addDepartParam.name"></el-input>
+                <div mt></div>
+                <el-input placeholder="部门权限标识" v-model="addDepartParam.role"></el-input>
+                <div flex justify-center>
+                    <el-button round w50 mt @click="addDepartBtnClick">
+                        新增
+                    </el-button>
+                </div>
+            </el-dialog>
+        </div>
     </div>
 </template>
 
 
 <script setup>
-import { addUserForDepart, getAllDepart, getRoutersByDepart, getUserByDepart, getAllRouter, addRouterForDepart, getAllUser } from '../../api/admin/rbac'
-import { ElLoading } from 'element-plus'
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { addDepart, addRouterForDepart, resetAuthority, addUserForDepart, delCasbinRule, getAllDepart, getAllRouter, getAllUser, getRoutersByDepart, getUserByDepart } from '../../api/admin/rbac';
 const departs = ref([])
 const routers = ref([])
 const users = ref([])
 const selectDepart = ref('admin')
 onMounted(async () => {
-    await getAllRouters();
+    getAllRouters();
     getAllDeparts()
 })
 
@@ -154,7 +174,7 @@ const userSelectDialogVis = ref(false);
 const allUsers = ref([]);
 // 打开选择用户对话框
 const openuserSelectDialog = async () => {
-    await getAllUsers()
+    getAllUsers()
     userSelectDialogVis.value = !userSelectDialogVis.value
 }
 // 获取所有用户
@@ -179,7 +199,7 @@ const selectUsers = ref([])
 const handleUserSelectionChange = async param => {
     selectUsers.value = param
 }
-
+// 为某个部门添加人员
 const addUserBtnClick = async () => {
     if (selectUsers.value.length === 0) {
         ElMessage.warning("您还未选择数据")
@@ -198,7 +218,48 @@ const addUserBtnClick = async () => {
     })
     await addUserForDepart(req).then(res => {
         userSelectDialogVis.value = !userSelectDialogVis.value
+        getUserByDeparts(selectDepart.value)
     })
     loadingInstance.close()
+}
+// 
+const delCasbinRules = uuid => {
+    delCasbinRule(uuid).then(res => { getUserByDeparts(selectDepart.value) })
+}
+
+// 添加部门
+const addDepartDialogVis = ref(false)
+const addDepartParam = ref({
+    uuid: '',
+    name: '',
+    role: ''
+
+})
+const addDepartBtnClick = () => {
+    if (addDepartParam.value.name === '' || addDepartParam.value.role === '') {
+        ElMessage.error('请确认是否有信息未填写！')
+        return
+    } else {
+        addDepartParam.value.uuid = addDepartParam.value.role
+    }
+    addDepart(addDepartParam.value).then(res => {
+        getAllDepart().then(res => {
+            departs.value = res.data
+            addDepartDialogVis.value = false
+        })
+    })
+
+}
+// 重置路由权限
+const resetAuthorityBtnClick = async () => {
+    ElMessageBox.alert('确认要重置所有部门的路由权限吗？  重置后您需要重新配置，重置后可以刷新所有的路由').then(async res => {
+        const loadingInstance = ElLoading.service({ text: '重置中,请耐心等待...' })
+        await resetAuthority().then(res => {
+            loadingInstance.close();
+        })
+    }).finally(() => {
+
+    })
+
 }
 </script>

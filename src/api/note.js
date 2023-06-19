@@ -16,7 +16,7 @@ export function addNote(param) {
 }
 export function getNotesByUuid(param) {
     return request({
-        url: '/note/' + param,
+        url: '/note?uuid=' + param,
         method: 'get'
     })
 }
@@ -42,7 +42,7 @@ export function getNotesByUser() {
 }
 export function delNoteByUuid(param) {
     return request({
-        url: '/note/' + param,
+        url: '/note?uuid=' + param,
         method: 'DELETE'
     })
 }

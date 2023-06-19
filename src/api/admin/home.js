@@ -31,7 +31,7 @@ export function getallSaying(param) {
 
 export function delSaying(param) {
     return request({
-        url: '/admin/home/saying/' + param,
+        url: '/admin/home/saying?uuid=' + param,
         method: 'DELETE'
     })
 }
@@ -39,7 +39,7 @@ export function delSaying(param) {
 
 export function upSaying(param) {
     return request({
-        url: '/admin/home/saying/',
+        url: '/admin/home/saying',
         method: 'put',
         data: param
     })
@@ -47,14 +47,14 @@ export function upSaying(param) {
 
 export function addSaying(param) {
     return request({
-        url: '/admin/home/saying/',
+        url: '/admin/home/saying',
         method: 'post',
         data: param
     })
 }
 export function getSaying(param) {
     return request({
-        url: '/admin/home/saying/' + param,
+        url: '/admin/home/saying?uuid=' + param,
         method: 'get'
     })
 }
